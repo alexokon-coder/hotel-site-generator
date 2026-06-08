@@ -1,9 +1,9 @@
 import Image from "next/image";
+import { formatConfigText, hotelConfig } from "@/hotel.config";
+import { resolveImage } from "@/lib/images";
 
-/** Stable Unsplash URLs — auto format, fixed dimensions, no broken query params */
-function unsplash(id: string, width: number) {
-  return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${width}&q=80`;
-}
+const { name, location, contact, images, hero, rooms, amenities, attractions, testimonials, sections, legalName } =
+  hotelConfig;
 
 const navLinks = [
   { href: "#rooms", label: "Rooms" },
@@ -11,121 +11,6 @@ const navLinks = [
   { href: "#attractions", label: "Explore" },
   { href: "#testimonials", label: "Reviews" },
   { href: "#book", label: "Book" },
-];
-
-const rooms = [
-  {
-    name: "Garden Room",
-    description:
-      "Ground-floor serenity with French doors opening onto our magnolia courtyard. Queen bed, rainfall shower, and hand-painted Bahamian tiles.",
-    price: "From $385",
-    image: unsplash("1631049307264-da0ec9d70304", 800),
-  },
-  {
-    name: "Veranda Suite",
-    description:
-      "A wraparound private veranda for morning coffee and evening trade winds. King bed, soaking tub, and partial Gulf views through the palms.",
-    price: "From $495",
-    image: unsplash("1582719478250-c89cae4dc85b", 800),
-  },
-  {
-    name: "Captain's Quarter",
-    description:
-      "Our signature top-floor retreat with vaulted Dade County pine ceilings, a four-poster king, and a clawfoot tub beneath a skylight.",
-    price: "From $625",
-    image: unsplash("1590490360182-c33d57733427", 800),
-  },
-];
-
-const amenities = [
-  {
-    icon: "✦",
-    title: "Courtyard Breakfast",
-    description:
-      "Each morning, a chef-prepared spread of tropical fruit, house pastries, and made-to-order eggs served beneath the magnolias.",
-  },
-  {
-    icon: "◈",
-    title: "Heated Plunge Pool",
-    description:
-      "A secluded saltwater plunge pool surrounded by orchids and jasmine — reserved exclusively for guests, never crowded.",
-  },
-  {
-    icon: "◇",
-    title: "Island Concierge",
-    description:
-      "Snorkeling at the reef, sunset sails, fishing charters, and hard-to-get dinner reservations — handled before you ask.",
-  },
-  {
-    icon: "◎",
-    title: "Sundowner Bar",
-    description:
-      "Complimentary evening cocktails featuring local rum, fresh key lime, and herbs clipped from our garden each afternoon.",
-  },
-  {
-    icon: "❖",
-    title: "Complimentary Bicycles",
-    description:
-      "Classic cruisers for every guest. Old Town Key West is best explored at a leisurely pace, two wheels at a time.",
-  },
-  {
-    icon: "✧",
-    title: "Afternoon Turn-Down",
-    description:
-      "Fresh towels, chilled water, and a small confection — often key lime truffles from a neighbor's kitchen on Simonton Street.",
-  },
-];
-
-const localAttractions = [
-  {
-    name: "Duval Street",
-    description:
-      "Five minutes by foot. Galleries, live music, and the rhythm of Key West nightlife — close enough to enjoy, quiet enough to escape.",
-    distance: "0.3 miles",
-    image: unsplash("1555881400-74d7acaacd8b", 600),
-  },
-  {
-    name: "Mallory Square Sunset",
-    description:
-      "The legendary nightly celebration at the harbor. Our concierge saves you a spot and packs a chilled bottle for the pier.",
-    distance: "0.6 miles",
-    image: unsplash("1473496160127-878880127eed", 600),
-  },
-  {
-    name: "Fort Zachary Taylor",
-    description:
-      "The island's best swimming beach and a Civil War-era fort wrapped in turquoise water. Snorkel gear available at the front desk.",
-    distance: "1.2 miles",
-    image: unsplash("1507525428034-b723cf961d3e", 600),
-  },
-  {
-    name: "Dry Tortugas Day Trip",
-    description:
-      "A full-day catamaran to Fort Jefferson — seventy miles of open water, world-class snorkeling, and stories you'll tell for years.",
-    distance: "Seaport ferry",
-    image: unsplash("1544551763-77a4157c2e8d", 600),
-  },
-];
-
-const testimonials = [
-  {
-    quote:
-      "We've stayed at properties across the Caribbean, and Magnolia House is something rarer — genuinely intimate, impossibly charming, and run by people who remember your name by the second morning.",
-    author: "Rachel & David Chen",
-    role: "Anniversary Stay, March 2025",
-  },
-  {
-    quote:
-      "The Captain's Quarter felt like sleeping inside a storybook. Waking up to courtyard light through plantation shutters, then key lime pancakes on the veranda — perfection.",
-    author: "Margaret Holloway",
-    role: "Solo Traveler, Condé Nast Traveler Reader",
-  },
-  {
-    quote:
-      "Our kids still talk about the bicycles and the pool. We still talk about the staff, the room, and the fact that we didn't need a car for four days. Already booked for Christmas.",
-    author: "The Whitmore Family",
-    role: "Returning Guests, Tampa FL",
-  },
 ];
 
 export default function Home() {
@@ -138,7 +23,7 @@ export default function Home() {
             href="#"
             className="font-serif text-xl tracking-widest text-white uppercase"
           >
-            Magnolia House
+            {name}
           </a>
           <ul className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => (
@@ -164,8 +49,8 @@ export default function Home() {
       {/* Hero */}
       <section className="relative flex min-h-screen items-center justify-center">
         <Image
-          src={unsplash("1566073771259-6a8506099945", 1920)}
-          alt="Magnolia House boutique hotel courtyard and pool at golden hour"
+          src={resolveImage(images.hero.src, 1920)}
+          alt={images.hero.alt}
           fill
           priority
           className="object-cover"
@@ -174,16 +59,15 @@ export default function Home() {
         <div className="absolute inset-0 bg-charcoal/50" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <p className="mb-4 text-sm tracking-[0.3em] text-gold-light uppercase">
-            Old Town Key West · Florida
+            {location.display}
           </p>
           <h1 className="font-serif text-5xl leading-tight text-white md:text-7xl lg:text-8xl">
-            Island Grace,
+            {hero.headline[0]}
             <br />
-            <span className="italic text-gold-light">Quietly Refined</span>
+            <span className="italic text-gold-light">{hero.headline[1]}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/85">
-            Twelve rooms in a restored 1890s conch captain&apos;s residence —
-            shaded by magnolias, steps from the Gulf, and far from the ordinary.
+            {hero.description}
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
@@ -223,27 +107,25 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-16 text-center">
             <p className="mb-3 text-sm tracking-[0.25em] text-gold uppercase">
-              Accommodations
+              {sections.rooms.eyebrow}
             </p>
             <h2 className="font-serif text-4xl text-charcoal md:text-5xl">
-              Rooms & Suites
+              {sections.rooms.title}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-stone-600">
-              No two rooms are alike. Each is appointed with antique furnishings,
-              crisp Italian linens, and the kind of details you notice only when
-              everything is exactly right.
+              {sections.rooms.description}
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {rooms.map((room) => (
               <article
-                key={room.name}
+                key={room.id}
                 className="group overflow-hidden bg-white shadow-sm transition-shadow hover:shadow-lg"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src={room.image}
-                    alt={room.name}
+                    src={resolveImage(room.image.src, 800)}
+                    alt={room.image.alt}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -279,15 +161,13 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-16 text-center">
             <p className="mb-3 text-sm tracking-[0.25em] text-gold uppercase">
-              Guest Privileges
+              {sections.amenities.eyebrow}
             </p>
             <h2 className="font-serif text-4xl text-white md:text-5xl">
-              Thoughtful Amenities
+              {sections.amenities.title}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-stone-400">
-              Luxury here is not loud. It is the bicycle waiting by the gate,
-              the cocktail that appears at five, and a staff that knows the best
-              table at the fish shack on Roosevelt Boulevard.
+              {sections.amenities.description}
             </p>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -316,27 +196,25 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-16 text-center">
             <p className="mb-3 text-sm tracking-[0.25em] text-gold uppercase">
-              Key West
+              {location.region}
             </p>
             <h2 className="font-serif text-4xl text-charcoal md:text-5xl">
-              Local Attractions
+              {sections.attractions.title}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-stone-600">
-              Everything that makes Key West unforgettable is within reach.
-              We will help you discover it — or simply hand you a beach towel
-              and point you toward the pool.
+              {sections.attractions.description}
             </p>
           </div>
           <div className="grid gap-8 sm:grid-cols-2">
-            {localAttractions.map((spot) => (
+            {attractions.map((spot) => (
               <article
                 key={spot.name}
                 className="group flex flex-col overflow-hidden bg-white shadow-sm sm:flex-row"
               >
                 <div className="relative aspect-[4/3] shrink-0 sm:aspect-auto sm:min-h-[220px] sm:w-2/5">
                   <Image
-                    src={spot.image}
-                    alt={spot.name}
+                    src={resolveImage(spot.image.src, 600)}
+                    alt={spot.image.alt}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 640px) 100vw, 40vw"
@@ -400,8 +278,8 @@ export default function Home() {
       {/* Booking CTA */}
       <section className="relative min-h-[420px] py-28 lg:min-h-[480px] lg:py-36">
         <Image
-          src={unsplash("1571896349842-33c89424de2d", 1920)}
-          alt="Tropical pool and palm trees at sunset"
+          src={resolveImage(images.bookingCta.src, 1920)}
+          alt={images.bookingCta.alt}
           fill
           className="object-cover"
           sizes="100vw"
@@ -409,14 +287,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-charcoal/65" />
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <p className="mb-4 text-sm tracking-[0.3em] text-gold-light uppercase">
-            Your Key West Escape Awaits
+            {sections.booking.eyebrow}
           </p>
           <h2 className="font-serif text-4xl leading-tight text-white md:text-5xl lg:text-6xl">
-            Reserve Your Room at Magnolia House
+            {formatConfigText(sections.booking.title)}
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/85">
-            Twelve rooms. One island. Direct bookings include complimentary
-            breakfast, evening cocktails, and our best available rate — always.
+            {sections.booking.description}
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
@@ -426,10 +303,10 @@ export default function Home() {
               Book Your Stay
             </a>
             <a
-              href="tel:+13052948800"
+              href={`tel:${contact.phoneTel}`}
               className="border border-white/40 px-10 py-4 text-sm tracking-widest text-white uppercase transition-colors hover:border-white hover:bg-white/10"
             >
-              Call (305) 294-8800
+              Call {contact.phone}
             </a>
           </div>
         </div>
@@ -447,32 +324,30 @@ export default function Home() {
                 Plan Your Stay
               </h2>
               <p className="mt-4 max-w-md leading-relaxed text-stone-400">
-                Submit your dates and we will confirm availability within the
-                hour. Prefer to speak with someone? Our front desk is here
-                seven days a week, from 7 AM to 10 PM.
+                {sections.booking.formDescription}
               </p>
               <div className="mt-8 space-y-4 text-sm text-stone-300">
                 <p>
                   <span className="text-gold">Address</span>
                   <br />
-                  512 Fleming Street
+                  {location.street}
                   <br />
-                  Key West, FL 33040
+                  {location.city}, {location.state} {location.zip}
                 </p>
                 <p>
                   <span className="text-gold">Telephone</span>
                   <br />
-                  (305) 294-8800
+                  {contact.phone}
                 </p>
                 <p>
                   <span className="text-gold">Email</span>
                   <br />
-                  stay@magnoliahousekw.com
+                  {contact.email}
                 </p>
                 <p>
                   <span className="text-gold">Check-In / Check-Out</span>
                   <br />
-                  3:00 PM · 11:00 AM
+                  {contact.checkIn} · {contact.checkOut}
                 </p>
               </div>
             </div>
@@ -564,15 +439,11 @@ export default function Home() {
                   <option value="" disabled className="bg-charcoal">
                     Select a room type
                   </option>
-                  <option value="garden" className="bg-charcoal">
-                    Garden Room
-                  </option>
-                  <option value="veranda" className="bg-charcoal">
-                    Veranda Suite
-                  </option>
-                  <option value="captain" className="bg-charcoal">
-                    Captain&apos;s Quarter
-                  </option>
+                  {rooms.map((room) => (
+                    <option key={room.id} value={room.id} className="bg-charcoal">
+                      {room.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -604,15 +475,14 @@ export default function Home() {
       <footer className="border-t border-white/10 bg-charcoal py-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row lg:px-8">
           <p className="font-serif text-lg tracking-widest text-white uppercase">
-            Magnolia House
+            {name}
           </p>
           <p className="text-xs text-stone-500">
-            © {new Date().getFullYear()} Magnolia House Key West. All rights
-            reserved.
+            © {new Date().getFullYear()} {legalName}. All rights reserved.
           </p>
           <div className="flex gap-6 text-xs tracking-widest text-stone-400 uppercase">
             <a
-              href="https://instagram.com"
+              href={contact.instagram}
               className="transition-colors hover:text-gold"
               target="_blank"
               rel="noopener noreferrer"

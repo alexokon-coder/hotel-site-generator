@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lato, Playfair_Display } from "next/font/google";
+import { hotelConfig } from "@/hotel.config";
 import "./globals.css";
 
 const lato = Lato({
@@ -15,9 +16,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Magnolia House | Luxury Boutique Hotel in Key West",
-  description:
-    "A restored 1890s conch captain's residence in Old Town Key West. Twelve intimate rooms, a magnolia-shaded courtyard, and the quiet luxury of island life.",
+  title: `${hotelConfig.name} | Luxury Boutique Hotel in ${hotelConfig.location.city}`,
+  description: hotelConfig.seo.description,
 };
 
 export default function RootLayout({
