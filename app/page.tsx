@@ -1,119 +1,130 @@
 import Image from "next/image";
 
+/** Stable Unsplash URLs — auto format, fixed dimensions, no broken query params */
+function unsplash(id: string, width: number) {
+  return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${width}&q=80`;
+}
+
 const navLinks = [
   { href: "#rooms", label: "Rooms" },
   { href: "#amenities", label: "Amenities" },
-  { href: "#gallery", label: "Gallery" },
+  { href: "#attractions", label: "Explore" },
   { href: "#testimonials", label: "Reviews" },
-  { href: "#contact", label: "Contact" },
+  { href: "#book", label: "Book" },
 ];
 
 const rooms = [
   {
-    name: "Deluxe Suite",
+    name: "Garden Room",
     description:
-      "Spacious quarters with marble bath, king bed, and private terrace overlooking the garden courtyard.",
-    price: "From $420",
-    image:
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
+      "Ground-floor serenity with French doors opening onto our magnolia courtyard. Queen bed, rainfall shower, and hand-painted Bahamian tiles.",
+    price: "From $385",
+    image: unsplash("1631049307264-da0ec9d70304", 800),
   },
   {
-    name: "Garden Villa",
+    name: "Veranda Suite",
     description:
-      "A secluded retreat with its own plunge pool, outdoor lounge, and butler service upon request.",
-    price: "From $680",
-    image:
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80",
+      "A wraparound private veranda for morning coffee and evening trade winds. King bed, soaking tub, and partial Gulf views through the palms.",
+    price: "From $495",
+    image: unsplash("1582719478250-c89cae4dc85b", 800),
   },
   {
-    name: "Penthouse Residence",
+    name: "Captain's Quarter",
     description:
-      "The crown jewel — panoramic city views, private dining room, and a curated art collection.",
-    price: "From $1,200",
-    image:
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80",
+      "Our signature top-floor retreat with vaulted Dade County pine ceilings, a four-poster king, and a clawfoot tub beneath a skylight.",
+    price: "From $625",
+    image: unsplash("1590490360182-c33d57733427", 800),
   },
 ];
 
 const amenities = [
   {
     icon: "✦",
-    title: "Michelin-Star Dining",
-    description: "Seasonal tasting menus crafted by our executive chef in an intimate setting.",
+    title: "Courtyard Breakfast",
+    description:
+      "Each morning, a chef-prepared spread of tropical fruit, house pastries, and made-to-order eggs served beneath the magnolias.",
   },
   {
     icon: "◈",
-    title: "Spa & Wellness",
-    description: "Holistic treatments, thermal pools, and a serene meditation garden.",
+    title: "Heated Plunge Pool",
+    description:
+      "A secluded saltwater plunge pool surrounded by orchids and jasmine — reserved exclusively for guests, never crowded.",
   },
   {
     icon: "◇",
-    title: "Concierge Service",
-    description: "Personalized itineraries, private transfers, and exclusive local experiences.",
+    title: "Island Concierge",
+    description:
+      "Snorkeling at the reef, sunset sails, fishing charters, and hard-to-get dinner reservations — handled before you ask.",
   },
   {
     icon: "◎",
-    title: "Rooftop Lounge",
-    description: "Handcrafted cocktails and live jazz beneath the stars every evening.",
+    title: "Sundowner Bar",
+    description:
+      "Complimentary evening cocktails featuring local rum, fresh key lime, and herbs clipped from our garden each afternoon.",
   },
   {
     icon: "❖",
-    title: "Private Library",
-    description: "A curated collection of rare volumes in a fireside reading salon.",
+    title: "Complimentary Bicycles",
+    description:
+      "Classic cruisers for every guest. Old Town Key West is best explored at a leisurely pace, two wheels at a time.",
   },
   {
     icon: "✧",
-    title: "Art Gallery",
-    description: "Rotating exhibitions featuring contemporary artists from around the world.",
+    title: "Afternoon Turn-Down",
+    description:
+      "Fresh towels, chilled water, and a small confection — often key lime truffles from a neighbor's kitchen on Simonton Street.",
   },
 ];
 
-const galleryImages = [
+const localAttractions = [
   {
-    src: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
-    alt: "Hotel exterior at dusk",
-    span: "col-span-2 row-span-2",
+    name: "Duval Street",
+    description:
+      "Five minutes by foot. Galleries, live music, and the rhythm of Key West nightlife — close enough to enjoy, quiet enough to escape.",
+    distance: "0.3 miles",
+    image: unsplash("1555881400-74d7acaacd8b", 600),
   },
   {
-    src: "https://images.unsplash.com/photo-1611892440500-42a77824a849?w=600&q=80",
-    alt: "Elegant hotel lobby",
-    span: "col-span-1 row-span-1",
+    name: "Mallory Square Sunset",
+    description:
+      "The legendary nightly celebration at the harbor. Our concierge saves you a spot and packs a chilled bottle for the pier.",
+    distance: "0.6 miles",
+    image: unsplash("1473496160127-878880127eed", 600),
   },
   {
-    src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80",
-    alt: "Infinity pool",
-    span: "col-span-1 row-span-1",
+    name: "Fort Zachary Taylor",
+    description:
+      "The island's best swimming beach and a Civil War-era fort wrapped in turquoise water. Snorkel gear available at the front desk.",
+    distance: "1.2 miles",
+    image: unsplash("1507525428034-b723cf961d3e", 600),
   },
   {
-    src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80",
-    alt: "Fine dining experience",
-    span: "col-span-1 row-span-1",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&q=80",
-    alt: "Spa treatment room",
-    span: "col-span-1 row-span-1",
+    name: "Dry Tortugas Day Trip",
+    description:
+      "A full-day catamaran to Fort Jefferson — seventy miles of open water, world-class snorkeling, and stories you'll tell for years.",
+    distance: "Seaport ferry",
+    image: unsplash("1544551763-77a4157c2e8d", 600),
   },
 ];
 
 const testimonials = [
   {
     quote:
-      "An extraordinary escape. Every detail — from the hand-stitched linens to the welcome champagne — felt deeply personal.",
-    author: "Eleanor Whitfield",
-    role: "Travel Editor, Luxe Journal",
+      "We've stayed at properties across the Caribbean, and Magnolia House is something rarer — genuinely intimate, impossibly charming, and run by people who remember your name by the second morning.",
+    author: "Rachel & David Chen",
+    role: "Anniversary Stay, March 2025",
   },
   {
     quote:
-      "Maison Lumière redefines boutique hospitality. The staff anticipated our every need before we even voiced it.",
-    author: "James & Catherine Moore",
-    role: "Returning Guests",
+      "The Captain's Quarter felt like sleeping inside a storybook. Waking up to courtyard light through plantation shutters, then key lime pancakes on the veranda — perfection.",
+    author: "Margaret Holloway",
+    role: "Solo Traveler, Condé Nast Traveler Reader",
   },
   {
     quote:
-      "The penthouse residence was breathtaking. We've stayed at the world's finest hotels, and this ranks among the very best.",
-    author: "Dr. Amara Okafor",
-    role: "Architect & Designer",
+      "Our kids still talk about the bicycles and the pool. We still talk about the staff, the room, and the fact that we didn't need a car for four days. Already booked for Christmas.",
+    author: "The Whitmore Family",
+    role: "Returning Guests, Tampa FL",
   },
 ];
 
@@ -127,7 +138,7 @@ export default function Home() {
             href="#"
             className="font-serif text-xl tracking-widest text-white uppercase"
           >
-            Maison Lumière
+            Magnolia House
           </a>
           <ul className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => (
@@ -142,10 +153,10 @@ export default function Home() {
             ))}
           </ul>
           <a
-            href="#contact"
+            href="#book"
             className="border border-gold px-5 py-2 text-xs tracking-widest text-gold uppercase transition-colors hover:bg-gold hover:text-charcoal"
           >
-            Reserve
+            Book Now
           </a>
         </nav>
       </header>
@@ -153,40 +164,39 @@ export default function Home() {
       {/* Hero */}
       <section className="relative flex min-h-screen items-center justify-center">
         <Image
-          src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80"
-          alt="Maison Lumière boutique hotel"
+          src={unsplash("1566073771259-6a8506099945", 1920)}
+          alt="Magnolia House boutique hotel courtyard and pool at golden hour"
           fill
           priority
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-charcoal/55" />
+        <div className="absolute inset-0 bg-charcoal/50" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <p className="mb-4 text-sm tracking-[0.3em] text-gold-light uppercase">
-            Est. 1924 · Paris
+            Old Town Key West · Florida
           </p>
           <h1 className="font-serif text-5xl leading-tight text-white md:text-7xl lg:text-8xl">
-            Where Elegance
+            Island Grace,
             <br />
-            <span className="italic text-gold-light">Meets Intimacy</span>
+            <span className="italic text-gold-light">Quietly Refined</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/80">
-            A hidden gem in the heart of the city — twenty-seven exquisitely
-            appointed suites, world-class dining, and service that anticipates
-            your every desire.
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/85">
+            Twelve rooms in a restored 1890s conch captain&apos;s residence —
+            shaded by magnolias, steps from the Gulf, and far from the ordinary.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="#rooms"
               className="bg-gold px-8 py-3.5 text-sm tracking-widest text-charcoal uppercase transition-colors hover:bg-gold-light"
             >
-              Explore Suites
+              View Rooms
             </a>
             <a
-              href="#contact"
+              href="#book"
               className="border border-white/40 px-8 py-3.5 text-sm tracking-widest text-white uppercase transition-colors hover:border-white hover:bg-white/10"
             >
-              Book Your Stay
+              Check Availability
             </a>
           </div>
         </div>
@@ -196,6 +206,7 @@ export default function Home() {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -215,11 +226,12 @@ export default function Home() {
               Accommodations
             </p>
             <h2 className="font-serif text-4xl text-charcoal md:text-5xl">
-              Suites & Residences
+              Rooms & Suites
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-stone-600">
-              Each room is a sanctuary of understated luxury — bespoke furnishings,
-              Italian marble, and views that inspire.
+              No two rooms are alike. Each is appointed with antique furnishings,
+              crisp Italian linens, and the kind of details you notice only when
+              everything is exactly right.
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -238,11 +250,11 @@ export default function Home() {
                   />
                 </div>
                 <div className="p-6">
-                  <div className="mb-2 flex items-center justify-between">
+                  <div className="mb-2 flex items-center justify-between gap-4">
                     <h3 className="font-serif text-2xl text-charcoal">
                       {room.name}
                     </h3>
-                    <span className="text-sm font-medium text-gold">
+                    <span className="shrink-0 text-sm font-medium text-gold">
                       {room.price}
                     </span>
                   </div>
@@ -250,10 +262,10 @@ export default function Home() {
                     {room.description}
                   </p>
                   <a
-                    href="#contact"
+                    href="#book"
                     className="mt-4 inline-block text-xs tracking-widest text-charcoal uppercase underline-offset-4 transition-all hover:text-gold hover:underline"
                   >
-                    View Details
+                    Check Availability
                   </a>
                 </div>
               </article>
@@ -267,14 +279,15 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-16 text-center">
             <p className="mb-3 text-sm tracking-[0.25em] text-gold uppercase">
-              Experiences
+              Guest Privileges
             </p>
             <h2 className="font-serif text-4xl text-white md:text-5xl">
-              Curated Amenities
+              Thoughtful Amenities
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-stone-400">
-              Beyond exceptional rooms, discover a world of refined pleasures
-              designed exclusively for our guests.
+              Luxury here is not loud. It is the bicycle waiting by the gate,
+              the cocktail that appears at five, and a staff that knows the best
+              table at the fish shack on Roosevelt Boulevard.
             </p>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -283,7 +296,7 @@ export default function Home() {
                 key={amenity.title}
                 className="border border-white/10 p-8 transition-colors hover:border-gold/40 hover:bg-white/5"
               >
-                <span className="mb-4 block text-2xl text-gold">
+                <span className="mb-4 block text-2xl text-gold" aria-hidden="true">
                   {amenity.icon}
                 </span>
                 <h3 className="mb-2 font-serif text-xl text-white">
@@ -298,31 +311,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gallery */}
-      <section id="gallery" className="bg-background py-24 lg:py-32">
+      {/* Local Attractions */}
+      <section id="attractions" className="bg-background py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mb-16 text-center">
             <p className="mb-3 text-sm tracking-[0.25em] text-gold uppercase">
-              Visual Journey
+              Key West
             </p>
             <h2 className="font-serif text-4xl text-charcoal md:text-5xl">
-              Gallery
+              Local Attractions
             </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-stone-600">
+              Everything that makes Key West unforgettable is within reach.
+              We will help you discover it — or simply hand you a beach towel
+              and point you toward the pool.
+            </p>
           </div>
-          <div className="grid auto-rows-[200px] grid-cols-2 gap-3 md:auto-rows-[250px] lg:grid-cols-4">
-            {galleryImages.map((img) => (
-              <div
-                key={img.alt}
-                className={`relative overflow-hidden ${img.span}`}
+          <div className="grid gap-8 sm:grid-cols-2">
+            {localAttractions.map((spot) => (
+              <article
+                key={spot.name}
+                className="group flex flex-col overflow-hidden bg-white shadow-sm sm:flex-row"
               >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className="object-cover transition-transform duration-700 hover:scale-105"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </div>
+                <div className="relative aspect-[4/3] shrink-0 sm:aspect-auto sm:min-h-[220px] sm:w-2/5">
+                  <Image
+                    src={spot.image}
+                    alt={spot.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, 40vw"
+                  />
+                </div>
+                <div className="flex flex-col justify-center p-6 sm:w-3/5">
+                  <span className="mb-2 text-xs tracking-widest text-gold uppercase">
+                    {spot.distance}
+                  </span>
+                  <h3 className="mb-2 font-serif text-2xl text-charcoal">
+                    {spot.name}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-stone-600">
+                    {spot.description}
+                  </p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
@@ -345,7 +376,10 @@ export default function Home() {
                 key={t.author}
                 className="flex flex-col bg-white p-8 shadow-sm"
               >
-                <span className="mb-4 font-serif text-4xl leading-none text-gold">
+                <span
+                  className="mb-4 font-serif text-4xl leading-none text-gold"
+                  aria-hidden="true"
+                >
                   &ldquo;
                 </span>
                 <p className="flex-1 text-sm leading-relaxed text-stone-600 italic">
@@ -363,8 +397,46 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact */}
-      <section id="contact" className="bg-charcoal py-24 lg:py-32">
+      {/* Booking CTA */}
+      <section className="relative min-h-[420px] py-28 lg:min-h-[480px] lg:py-36">
+        <Image
+          src={unsplash("1571896349842-33c89424de2d", 1920)}
+          alt="Tropical pool and palm trees at sunset"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-charcoal/65" />
+        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
+          <p className="mb-4 text-sm tracking-[0.3em] text-gold-light uppercase">
+            Your Key West Escape Awaits
+          </p>
+          <h2 className="font-serif text-4xl leading-tight text-white md:text-5xl lg:text-6xl">
+            Reserve Your Room at Magnolia House
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/85">
+            Twelve rooms. One island. Direct bookings include complimentary
+            breakfast, evening cocktails, and our best available rate — always.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a
+              href="#book"
+              className="bg-gold px-10 py-4 text-sm tracking-widest text-charcoal uppercase transition-colors hover:bg-gold-light"
+            >
+              Book Your Stay
+            </a>
+            <a
+              href="tel:+13052948800"
+              className="border border-white/40 px-10 py-4 text-sm tracking-widest text-white uppercase transition-colors hover:border-white hover:bg-white/10"
+            >
+              Call (305) 294-8800
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Booking */}
+      <section id="book" className="bg-charcoal py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid items-start gap-16 lg:grid-cols-2">
             <div>
@@ -372,28 +444,35 @@ export default function Home() {
                 Reservations
               </p>
               <h2 className="font-serif text-4xl text-white md:text-5xl">
-                Begin Your Journey
+                Plan Your Stay
               </h2>
               <p className="mt-4 max-w-md leading-relaxed text-stone-400">
-                Our concierge team is available around the clock to craft your
-                perfect stay. Reach out to reserve your suite or inquire about
-                private events.
+                Submit your dates and we will confirm availability within the
+                hour. Prefer to speak with someone? Our front desk is here
+                seven days a week, from 7 AM to 10 PM.
               </p>
               <div className="mt-8 space-y-4 text-sm text-stone-300">
                 <p>
                   <span className="text-gold">Address</span>
                   <br />
-                  14 Rue de la Paix, 75002 Paris
+                  512 Fleming Street
+                  <br />
+                  Key West, FL 33040
                 </p>
                 <p>
                   <span className="text-gold">Telephone</span>
                   <br />
-                  +33 1 42 86 00 00
+                  (305) 294-8800
                 </p>
                 <p>
                   <span className="text-gold">Email</span>
                   <br />
-                  reservations@maisonlumiere.com
+                  stay@magnoliahousekw.com
+                </p>
+                <p>
+                  <span className="text-gold">Check-In / Check-Out</span>
+                  <br />
+                  3:00 PM · 11:00 AM
                 </p>
               </div>
             </div>
@@ -410,7 +489,7 @@ export default function Home() {
                     id="firstName"
                     type="text"
                     className="w-full border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-stone-500 outline-none transition-colors focus:border-gold"
-                    placeholder="Élodie"
+                    placeholder="Sarah"
                   />
                 </div>
                 <div>
@@ -424,7 +503,7 @@ export default function Home() {
                     id="lastName"
                     type="text"
                     className="w-full border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-stone-500 outline-none transition-colors focus:border-gold"
-                    placeholder="Dupont"
+                    placeholder="Mitchell"
                   />
                 </div>
               </div>
@@ -448,7 +527,7 @@ export default function Home() {
                     htmlFor="checkIn"
                     className="mb-1.5 block text-xs tracking-widest text-stone-400 uppercase"
                   >
-                    Check In
+                    Arrival
                   </label>
                   <input
                     id="checkIn"
@@ -461,7 +540,7 @@ export default function Home() {
                     htmlFor="checkOut"
                     className="mb-1.5 block text-xs tracking-widest text-stone-400 uppercase"
                   >
-                    Check Out
+                    Departure
                   </label>
                   <input
                     id="checkOut"
@@ -469,6 +548,32 @@ export default function Home() {
                     className="w-full border border-white/20 bg-white/5 px-4 py-3 text-white outline-none transition-colors focus:border-gold"
                   />
                 </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="roomPreference"
+                  className="mb-1.5 block text-xs tracking-widest text-stone-400 uppercase"
+                >
+                  Room Preference
+                </label>
+                <select
+                  id="roomPreference"
+                  className="w-full border border-white/20 bg-white/5 px-4 py-3 text-white outline-none transition-colors focus:border-gold"
+                  defaultValue=""
+                >
+                  <option value="" disabled className="bg-charcoal">
+                    Select a room type
+                  </option>
+                  <option value="garden" className="bg-charcoal">
+                    Garden Room
+                  </option>
+                  <option value="veranda" className="bg-charcoal">
+                    Veranda Suite
+                  </option>
+                  <option value="captain" className="bg-charcoal">
+                    Captain&apos;s Quarter
+                  </option>
+                </select>
               </div>
               <div>
                 <label
@@ -481,14 +586,14 @@ export default function Home() {
                   id="message"
                   rows={4}
                   className="w-full resize-none border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-stone-500 outline-none transition-colors focus:border-gold"
-                  placeholder="Tell us about your ideal stay..."
+                  placeholder="Celebrating an anniversary, need a late arrival, interested in a fishing charter..."
                 />
               </div>
               <button
                 type="submit"
                 className="w-full bg-gold py-3.5 text-sm tracking-widest text-charcoal uppercase transition-colors hover:bg-gold-light sm:w-auto sm:px-12"
               >
-                Send Inquiry
+                Request Reservation
               </button>
             </form>
           </div>
@@ -499,13 +604,19 @@ export default function Home() {
       <footer className="border-t border-white/10 bg-charcoal py-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row lg:px-8">
           <p className="font-serif text-lg tracking-widest text-white uppercase">
-            Maison Lumière
+            Magnolia House
           </p>
           <p className="text-xs text-stone-500">
-            © {new Date().getFullYear()} Maison Lumière. All rights reserved.
+            © {new Date().getFullYear()} Magnolia House Key West. All rights
+            reserved.
           </p>
           <div className="flex gap-6 text-xs tracking-widest text-stone-400 uppercase">
-            <a href="#" className="transition-colors hover:text-gold">
+            <a
+              href="https://instagram.com"
+              className="transition-colors hover:text-gold"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Instagram
             </a>
             <a href="#" className="transition-colors hover:text-gold">

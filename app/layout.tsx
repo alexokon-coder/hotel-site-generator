@@ -15,9 +15,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Maison Lumière | Luxury Boutique Hotel",
+  title: "Magnolia House | Luxury Boutique Hotel in Key West",
   description:
-    "An intimate sanctuary of refined elegance. Experience bespoke hospitality at Maison Lumière.",
+    "A restored 1890s conch captain's residence in Old Town Key West. Twelve intimate rooms, a magnolia-shaded courtyard, and the quiet luxury of island life.",
 };
 
 export default function RootLayout({
