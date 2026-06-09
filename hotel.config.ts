@@ -46,7 +46,7 @@ export const hotelConfig = {
       alt: "WoodSpring Suites Orlando East UCF extended stay hotel exterior",
     },
     bookingCta: {
-      src: "1520250497591-112f2f996a4e",
+      src: "1571896349842-33c89424de2d",
       alt: "Modern extended stay suite with in-room kitchen",
     },
   },
@@ -78,7 +78,7 @@ export const hotelConfig = {
         "Fully accessible studio with in-room kitchen, braille-coded exits, accessible registration desk, ramps, visual alarms, and a clear route from the public entrance to your room. Every comfort of our standard suite, designed without compromise.",
       price: "Weekly Rates Available",
       image: {
-        src: "1582719478250-c89cae4dc85b",
+        src: "1590490360182-c33d57733427",
         alt: "Accessible extended stay suite with open layout",
       },
     },
@@ -89,7 +89,7 @@ export const hotelConfig = {
         "Bring your dog — up to two per room, 50 lbs max. Same full kitchen and suite layout as our standard studio. Pet fee of $15 per pet per night; $50 non-refundable deposit per stay. Dogs only — no cats.",
       price: "Weekly Rates Available",
       image: {
-        src: "1554993722-975bbf381f2e",
+        src: "1583337130417-3346a1be7dee",
         alt: "Comfortable suite welcoming guests traveling with dogs",
       },
     },
@@ -143,7 +143,7 @@ export const hotelConfig = {
         "Just 6 miles away — ideal for campus visits, orientation weekends, move-in weeks, and semester-long stays. Easy access via US-408 and US-50.",
       distance: "6 miles",
       image: {
-        src: "1523580492559-0b150bcb9b1e",
+        src: "1562774053-701939374585",
         alt: "University campus grounds near Orlando",
       },
     },
@@ -153,7 +153,7 @@ export const hotelConfig = {
         "29 miles to the magic — close enough for day trips and family visits, with the comfort of a full kitchen and quiet suite waiting when you return.",
       distance: "29 miles",
       image: {
-        src: "1516455206839-7f27c015ac0f",
+        src: "1464366400600-7168b8af9bc3",
         alt: "Orlando area theme park skyline at dusk",
       },
     },
@@ -163,7 +163,7 @@ export const hotelConfig = {
         "17 miles from your suite door. Spend the day at the park, then come back to space, privacy, and a kitchen that works around your family's schedule.",
       distance: "17 miles",
       image: {
-        src: "1551244072-7d14dafd3cbf",
+        src: "1582719508461-905c673771fd",
         alt: "Marine life and aquatic park experience in Orlando",
       },
     },

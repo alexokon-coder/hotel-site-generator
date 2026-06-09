@@ -48,14 +48,16 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative flex min-h-screen items-center justify-center">
-        <Image
-          src={resolveImage(images.hero.src, 1920)}
-          alt={images.hero.alt}
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
+        <div className="absolute inset-0">
+          <Image
+            src={resolveImage(images.hero.src, 1920)}
+            alt={images.hero.alt}
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+        </div>
         <div className="absolute inset-0 bg-charcoal/50" />
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <p className="mb-4 text-sm tracking-[0.3em] text-gold-light uppercase">
@@ -211,7 +213,7 @@ export default function Home() {
                 key={spot.name}
                 className="group flex flex-col overflow-hidden bg-white shadow-sm sm:flex-row"
               >
-                <div className="relative aspect-[4/3] shrink-0 sm:aspect-auto sm:min-h-[220px] sm:w-2/5">
+                <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden sm:aspect-auto sm:w-2/5 sm:min-h-[220px] sm:self-stretch">
                   <Image
                     src={resolveImage(spot.image.src, 600)}
                     alt={spot.image.alt}
@@ -277,13 +279,15 @@ export default function Home() {
 
       {/* Booking CTA */}
       <section className="relative min-h-[420px] py-28 lg:min-h-[480px] lg:py-36">
-        <Image
-          src={resolveImage(images.bookingCta.src, 1920)}
-          alt={images.bookingCta.alt}
-          fill
-          className="object-cover"
-          sizes="100vw"
-        />
+        <div className="absolute inset-0">
+          <Image
+            src={resolveImage(images.bookingCta.src, 1920)}
+            alt={images.bookingCta.alt}
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
+        </div>
         <div className="absolute inset-0 bg-charcoal/65" />
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <p className="mb-4 text-sm tracking-[0.3em] text-gold-light uppercase">
