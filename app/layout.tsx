@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
-import { Lato, Playfair_Display } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  DM_Sans,
+  DM_Serif_Display,
+  Lato,
+  Libre_Baskerville,
+  Nunito_Sans,
+  Playfair_Display,
+  Source_Sans_3,
+} from "next/font/google";
+import { DemoShell } from "@/components/demo/DemoShell";
 import { hotelConfig } from "@/hotel.config";
+import { generateThemeStylesheet } from "@/lib/themes";
 import "./globals.css";
 
 const lato = Lato({
@@ -15,6 +26,56 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
 });
 
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+});
+
+const libreBaskerville = Libre_Baskerville({
+  variable: "--font-libre-baskerville",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const nunitoSans = Nunito_Sans({
+  variable: "--font-nunito-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
+
+const dmSerif = DM_Serif_Display({
+  variable: "--font-dm-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+const fontVariables = [
+  lato.variable,
+  playfair.variable,
+  cormorant.variable,
+  sourceSans.variable,
+  libreBaskerville.variable,
+  nunitoSans.variable,
+  dmSans.variable,
+  dmSerif.variable,
+].join(" ");
+
+/** Read from config on every render so theme changes hot-reload in dev. */
+const activeTheme = hotelConfig.theme;
+
 export const metadata: Metadata = {
   title: `${hotelConfig.name} | Luxury Boutique Hotel in ${hotelConfig.location.city}`,
   description: hotelConfig.seo.description,
@@ -26,8 +87,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${lato.variable} ${playfair.variable} antialiased`}>
-      <body className="min-h-screen bg-background text-foreground">{children}</body>
+    <html
+      lang="en"
+      data-theme={activeTheme}
+      className={`${fontVariables} antialiased`}
+      suppressHydrationWarning
+    >
+      <head>
+        <style
+          id="hotel-theme-variables"
+          dangerouslySetInnerHTML={{ __html: generateThemeStylesheet() }}
+        />
+      </head>
+      <body className="min-h-screen">
+        <DemoShell>{children}</DemoShell>
+      </body>
     </html>
   );
 }

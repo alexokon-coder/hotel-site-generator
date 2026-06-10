@@ -1,3 +1,5 @@
+import type { ThemeName } from "@/lib/themes";
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *  HOTEL CONFIG — Edit this file to customize the entire website.
@@ -10,9 +12,13 @@
  */
 
 export const hotelConfig = {
+  // ── Theme ─────────────────────────────────────────────────────
+  /** Options: "luxury" | "coastal" | "rustic" | "modern" — save file to apply (hot-reloads in dev) */
+  theme: "coastal" as ThemeName,
+
   // ── Identity ──────────────────────────────────────────────────
-  name: "WoodSpring Suites Orlando East UCF",
-  legalName: "WoodSpring Suites Orlando East UCF",
+  name: "WoodSpring Suites Olando",
+  legalName: "WoodSpring Suites Orlando",
 
   location: {
     /** Shown in the hero eyebrow, e.g. "Orlando East · Near UCF" */

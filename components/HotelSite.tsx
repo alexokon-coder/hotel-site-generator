@@ -1,0 +1,632 @@
+"use client";
+
+import Image from "next/image";
+import { formatConfigText, hotelConfig } from "@/hotel.config";
+import { resolveImage } from "@/lib/images";
+import { useDesign } from "@/components/demo/DesignProvider";
+
+const {
+  name,
+  location,
+  contact,
+  images,
+  hero,
+  rooms,
+  amenities,
+  attractions,
+  testimonials,
+  sections,
+  legalName,
+  seo,
+} = hotelConfig;
+
+const galleryImages = [
+  images.hero,
+  images.bookingCta,
+  ...rooms.map((r) => r.image),
+  ...attractions.slice(0, 2).map((a) => a.image),
+];
+
+const heroCarouselImages = [
+  images.hero,
+  images.bookingCta,
+  ...rooms.slice(0, 2).map((r) => r.image),
+];
+
+export function HotelSite() {
+  const { customization } = useDesign();
+  const { sections: visibility, heroLayout } = customization;
+
+  const navLinks = [
+    { href: "#rooms", label: "Rooms" },
+    ...(visibility.amenities ? [{ href: "#amenities", label: "Amenities" }] : []),
+    ...(visibility.gallery ? [{ href: "#gallery", label: "Gallery" }] : []),
+    ...(visibility.attractions ? [{ href: "#attractions", label: "Explore" }] : []),
+    ...(visibility.about ? [{ href: "#about", label: "About" }] : []),
+    ...(visibility.reviews ? [{ href: "#testimonials", label: "Reviews" }] : []),
+    ...(visibility.faq ? [{ href: "#faq", label: "FAQ" }] : []),
+    { href: "#book", label: "Book" },
+  ];
+
+  return (
+    <div className="theme-page font-sans">
+      <header className="theme-nav fixed top-0 z-50 w-full">
+        <nav className="mx-auto flex h-full max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+          <a href="#" className="theme-nav-logo text-xl uppercase">
+            {name}
+          </a>
+          <ul className="hidden items-center gap-8 md:flex">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <a href={link.href} className="theme-nav-link text-sm">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a href="#book" className="theme-btn-nav text-xs">
+            Book Now
+          </a>
+        </nav>
+      </header>
+
+      {/* Hero */}
+      <section className="theme-hero layout-hero relative flex items-center justify-center">
+        <div className="layout-hero-media absolute inset-0">
+          {heroLayout === "image-carousel" ? (
+            heroCarouselImages.map((img, i) => (
+              <div
+                key={img.src}
+                className="layout-hero-slide absolute inset-0"
+                style={{ animationDelay: `${i * 4}s` }}
+              >
+                <Image
+                  src={resolveImage(img.src, 1920)}
+                  alt={img.alt}
+                  fill
+                  priority={i === 0}
+                  className="theme-image object-cover"
+                  sizes="100vw"
+                />
+              </div>
+            ))
+          ) : (
+            <Image
+              src={resolveImage(images.hero.src, 1920)}
+              alt={images.hero.alt}
+              fill
+              priority
+              className="theme-image object-cover"
+              sizes="100vw"
+            />
+          )}
+          <div className="theme-hero-overlay absolute inset-0" />
+        </div>
+
+        <div className="layout-hero-content theme-hero-text relative z-10 mx-auto max-w-4xl px-6 text-center">
+          <p className="theme-hero-eyebrow theme-eyebrow mb-4 text-sm uppercase">
+            {location.display}
+          </p>
+          <h1 className="theme-heading theme-h1 leading-tight">
+            {hero.headline[0]}
+            <br />
+            <span className="italic text-accent-light">{hero.headline[1]}</span>
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed opacity-90">
+            {hero.description}
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="#rooms" className="theme-btn-primary">
+              View Rooms
+            </a>
+            <a href="#book" className="theme-btn-outline">
+              Check Availability
+            </a>
+          </div>
+        </div>
+
+        {heroLayout === "booking-focused" && (
+          <div className="layout-hero-booking relative z-10 mx-auto mt-8 w-full max-w-md px-6">
+            <form className="theme-card p-6 text-left">
+              <p className="theme-eyebrow mb-2 text-xs uppercase">Quick booking</p>
+              <h2 className="theme-heading mb-4 text-xl theme-heading-light">Check availability</h2>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <input
+                  type="date"
+                  className="theme-input w-full border border-muted-border bg-surface px-3 py-2 text-sm"
+                  aria-label="Arrival"
+                />
+                <input
+                  type="date"
+                  className="theme-input w-full border border-muted-border bg-surface px-3 py-2 text-sm"
+                  aria-label="Departure"
+                />
+              </div>
+              <a href="#book" className="theme-btn-primary mt-4 block w-full text-center">
+                Search dates
+              </a>
+            </form>
+          </div>
+        )}
+
+        {heroLayout === "fullscreen" && (
+          <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-bounce opacity-50">
+            <svg
+              className="h-6 w-6 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+        )}
+      </section>
+
+      {/* About */}
+      {visibility.about && (
+        <section id="about" className="theme-section theme-section-rooms">
+          <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
+            <p className="theme-eyebrow mb-3 text-sm uppercase">Our story</p>
+            <h2 className="theme-heading theme-h2 theme-heading-light">About {name}</h2>
+            <p className="mx-auto mt-6 leading-relaxed text-muted">{seo.description}</p>
+          </div>
+        </section>
+      )}
+
+      {/* Rooms */}
+      <section id="rooms" className="theme-section theme-section-rooms">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <p className="theme-eyebrow mb-3 text-sm uppercase">{sections.rooms.eyebrow}</p>
+            <h2 className="theme-heading theme-h2 theme-heading-light">{sections.rooms.title}</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted">{sections.rooms.description}</p>
+          </div>
+          <div className="layout-rooms-grid theme-section-grid grid md:grid-cols-2 lg:grid-cols-3">
+            {rooms.map((room) => (
+              <article key={room.id} className="theme-card group overflow-hidden">
+                <div className="theme-image-wrap theme-room-image-wrap relative aspect-[4/3]">
+                  <Image
+                    src={resolveImage(room.image.src, 800)}
+                    alt={room.image.alt}
+                    fill
+                    className="theme-image object-cover group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div className="theme-card-body">
+                  <div className="mb-2 flex items-center justify-between gap-4">
+                    <h3 className="theme-heading text-2xl theme-heading-light">{room.name}</h3>
+                    <span className="shrink-0 text-sm font-medium text-accent">{room.price}</span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-muted">{room.description}</p>
+                  <a
+                    href="#book"
+                    className="mt-4 inline-block text-xs tracking-widest uppercase underline-offset-4 transition-all hover:text-accent hover:underline"
+                    style={{ color: "var(--heading-on-surface)" }}
+                  >
+                    Check Availability
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Amenities */}
+      {visibility.amenities && (
+        <section id="amenities" className="theme-section theme-section-amenities">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mb-16 text-center">
+              <p className="theme-eyebrow mb-3 text-sm uppercase">{sections.amenities.eyebrow}</p>
+              <h2 className="theme-heading theme-h2 theme-heading-dark">{sections.amenities.title}</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-muted-on-dark">
+                {sections.amenities.description}
+              </p>
+            </div>
+            <div className="theme-section-grid grid sm:grid-cols-2 lg:grid-cols-3">
+              {amenities.map((amenity) => (
+                <div key={amenity.title} className="theme-amenity-card p-8">
+                  <span className="mb-4 block text-2xl text-accent" aria-hidden="true">
+                    {amenity.icon}
+                  </span>
+                  <h3 className="theme-heading mb-2 text-xl theme-heading-dark">{amenity.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-on-dark">{amenity.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Gallery */}
+      {visibility.gallery && (
+        <section id="gallery" className="theme-section theme-section-gallery">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mb-16 text-center">
+              <p className="theme-eyebrow mb-3 text-sm uppercase">Property</p>
+              <h2 className="theme-heading theme-h2 theme-heading-light">Photo Gallery</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-muted">
+                A glimpse of suites, amenities, and the surrounding area.
+              </p>
+            </div>
+            <div className="layout-gallery-grid theme-section-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {galleryImages.map((img, i) => (
+                <div
+                  key={`${img.src}-${i}`}
+                  className="theme-image-wrap relative aspect-[4/3] overflow-hidden"
+                >
+                  <Image
+                    src={resolveImage(img.src, 800)}
+                    alt={img.alt}
+                    fill
+                    className="theme-image object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Local Attractions */}
+      {visibility.attractions && (
+        <section id="attractions" className="theme-section theme-section-gallery">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mb-16 text-center">
+              <p className="theme-eyebrow mb-3 text-sm uppercase">{location.region}</p>
+              <h2 className="theme-heading theme-h2 theme-heading-light">
+                {sections.attractions.title}
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-muted">{sections.attractions.description}</p>
+            </div>
+            <div className="theme-section-grid grid sm:grid-cols-2">
+              {attractions.map((spot) => (
+                <article
+                  key={spot.name}
+                  className="theme-card group flex flex-col overflow-hidden sm:flex-row"
+                >
+                  <div className="theme-image-wrap relative aspect-[4/3] w-full shrink-0 sm:aspect-auto sm:w-2/5 sm:min-h-[220px] sm:self-stretch">
+                    <Image
+                      src={resolveImage(spot.image.src, 600)}
+                      alt={spot.image.alt}
+                      fill
+                      className="theme-image object-cover group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, 40vw"
+                    />
+                  </div>
+                  <div className="theme-card-body flex flex-col justify-center sm:w-3/5">
+                    <span className="theme-eyebrow mb-2 text-xs uppercase">{spot.distance}</span>
+                    <h3 className="theme-heading mb-2 text-2xl theme-heading-light">{spot.name}</h3>
+                    <p className="text-sm leading-relaxed text-muted">{spot.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Testimonials */}
+      {visibility.reviews && (
+        <section id="testimonials" className="theme-section theme-section-alt">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mb-16 text-center">
+              <p className="theme-eyebrow mb-3 text-sm uppercase">Guest Stories</p>
+              <h2 className="theme-heading theme-h2 theme-heading-light">What Our Guests Say</h2>
+            </div>
+            <div className="theme-section-grid grid md:grid-cols-3">
+              {testimonials.map((t) => (
+                <blockquote key={t.author} className="theme-card flex flex-col">
+                  <div className="theme-card-body flex flex-1 flex-col">
+                    <span
+                      className="theme-heading mb-4 text-4xl leading-none text-accent"
+                      aria-hidden="true"
+                    >
+                      &ldquo;
+                    </span>
+                    <p className="flex-1 text-sm leading-relaxed text-muted italic">{t.quote}</p>
+                    <footer className="mt-6 border-t border-muted-border pt-6">
+                      <cite className="not-italic">
+                        <p
+                          className="font-medium theme-heading-light"
+                          style={{ color: "var(--heading-on-surface)" }}
+                        >
+                          {t.author}
+                        </p>
+                        <p className="text-xs text-muted-subtle">{t.role}</p>
+                      </cite>
+                    </footer>
+                  </div>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* FAQ */}
+      {visibility.faq && (
+        <section id="faq" className="theme-section theme-section-rooms">
+          <div className="mx-auto max-w-3xl px-6 lg:px-8">
+            <div className="mb-12 text-center">
+              <p className="theme-eyebrow mb-3 text-sm uppercase">Questions</p>
+              <h2 className="theme-heading theme-h2 theme-heading-light">Frequently Asked</h2>
+            </div>
+            <div className="space-y-4">
+              {[
+                {
+                  q: "What are check-in and check-out times?",
+                  a: `Check-in begins at ${contact.checkIn} and check-out is by ${contact.checkOut}.`,
+                },
+                {
+                  q: "Do suites include kitchens?",
+                  a: "Yes — every suite includes a full in-room kitchen with cookware and appliances.",
+                },
+                {
+                  q: "Are weekly or monthly rates available?",
+                  a: "Extended-stay rates are available; the longer you stay, the better the value.",
+                },
+              ].map((item) => (
+                <details key={item.q} className="theme-card theme-card-body">
+                  <summary className="theme-heading cursor-pointer text-lg theme-heading-light">
+                    {item.q}
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Map */}
+      {visibility.map && (
+        <section id="map" className="theme-section theme-section-alt">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mb-10 text-center">
+              <p className="theme-eyebrow mb-3 text-sm uppercase">Location</p>
+              <h2 className="theme-heading theme-h2 theme-heading-light">Find Us</h2>
+              <p className="mx-auto mt-4 max-w-xl text-muted">
+                {location.street}, {location.city}, {location.state} {location.zip}
+              </p>
+            </div>
+            <div className="theme-card overflow-hidden">
+              <iframe
+                title={`Map of ${name}`}
+                className="h-[360px] w-full border-0 grayscale-[30%]"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                  `${location.street}, ${location.city}, ${location.state} ${location.zip}`
+                )}&output=embed`}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Booking CTA */}
+      <section className="theme-section relative min-h-[420px] lg:min-h-[480px]">
+        <div className="absolute inset-0">
+          <Image
+            src={resolveImage(images.bookingCta.src, 1920)}
+            alt={images.bookingCta.alt}
+            fill
+            className="theme-image object-cover"
+            sizes="100vw"
+          />
+        </div>
+        <div className="theme-cta-overlay absolute inset-0" />
+        <div className="theme-hero-text relative z-10 mx-auto max-w-3xl px-6 text-center">
+          <p className="theme-eyebrow mb-4 text-sm uppercase text-accent-light">
+            {sections.booking.eyebrow}
+          </p>
+          <h2 className="theme-heading theme-h2 leading-tight">
+            {formatConfigText(sections.booking.title)}
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed opacity-90">
+            {sections.booking.description}
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="#book" className="theme-btn-primary">
+              Book Your Stay
+            </a>
+            <a href={`tel:${contact.phoneTel}`} className="theme-btn-outline">
+              Call {contact.phone}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Booking form */}
+      <section id="book" className="theme-section theme-section-book">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid items-start gap-16 lg:grid-cols-2">
+            <div>
+              <p className="theme-eyebrow mb-3 text-sm uppercase">Reservations</p>
+              <h2 className="theme-heading theme-h2 theme-heading-dark">Plan Your Stay</h2>
+              <p className="mt-4 max-w-md leading-relaxed text-muted-on-dark">
+                {sections.booking.formDescription}
+              </p>
+              <div className="mt-8 space-y-4 text-sm text-muted-on-dark">
+                <p>
+                  <span className="text-accent">Address</span>
+                  <br />
+                  {location.street}
+                  <br />
+                  {location.city}, {location.state} {location.zip}
+                </p>
+                <p>
+                  <span className="text-accent">Telephone</span>
+                  <br />
+                  {contact.phone}
+                </p>
+                <p>
+                  <span className="text-accent">Email</span>
+                  <br />
+                  {contact.email}
+                </p>
+                <p>
+                  <span className="text-accent">Check-In / Check-Out</span>
+                  <br />
+                  {contact.checkIn} · {contact.checkOut}
+                </p>
+              </div>
+            </div>
+            <form className="space-y-5">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="mb-1.5 block text-xs tracking-widest text-muted-on-dark uppercase"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    className="theme-input w-full border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-muted-subtle"
+                    placeholder="Sarah"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    className="mb-1.5 block text-xs tracking-widest text-muted-on-dark uppercase"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    type="text"
+                    className="theme-input w-full border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-muted-subtle"
+                    placeholder="Mitchell"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-1.5 block text-xs tracking-widest text-muted-on-dark uppercase"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  className="theme-input w-full border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-muted-subtle"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="checkIn"
+                    className="mb-1.5 block text-xs tracking-widest text-muted-on-dark uppercase"
+                  >
+                    Arrival
+                  </label>
+                  <input
+                    id="checkIn"
+                    type="date"
+                    className="theme-input w-full border border-white/20 bg-white/5 px-4 py-3 text-white"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="checkOut"
+                    className="mb-1.5 block text-xs tracking-widest text-muted-on-dark uppercase"
+                  >
+                    Departure
+                  </label>
+                  <input
+                    id="checkOut"
+                    type="date"
+                    className="theme-input w-full border border-white/20 bg-white/5 px-4 py-3 text-white"
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="roomPreference"
+                  className="mb-1.5 block text-xs tracking-widest text-muted-on-dark uppercase"
+                >
+                  Room Preference
+                </label>
+                <select
+                  id="roomPreference"
+                  className="theme-input w-full border border-white/20 bg-white/5 px-4 py-3 text-white"
+                  defaultValue=""
+                >
+                  <option value="" disabled style={{ background: "var(--section-book-bg)" }}>
+                    Select a room type
+                  </option>
+                  {rooms.map((room) => (
+                    <option
+                      key={room.id}
+                      value={room.id}
+                      style={{ background: "var(--section-book-bg)" }}
+                    >
+                      {room.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="message"
+                  className="mb-1.5 block text-xs tracking-widest text-muted-on-dark uppercase"
+                >
+                  Special Requests
+                </label>
+                <textarea
+                  id="message"
+                  rows={4}
+                  className="theme-input w-full resize-none border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-muted-subtle"
+                  placeholder="Celebrating an anniversary, need a late arrival..."
+                />
+              </div>
+              <button type="submit" className="theme-btn-primary w-full sm:w-auto">
+                Request Reservation
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <footer className="theme-footer py-12">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row lg:px-8">
+          <p className="theme-nav-logo text-lg uppercase text-white">{name}</p>
+          <p className="text-xs text-muted-on-dark opacity-80">
+            © {new Date().getFullYear()} {legalName}. All rights reserved.
+          </p>
+          <div className="flex gap-6 text-xs tracking-widest text-muted-on-dark uppercase">
+            <a
+              href={contact.instagram}
+              className="transition-colors hover:text-accent"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram
+            </a>
+            <a href="#" className="transition-colors hover:text-accent">
+              Privacy
+            </a>
+            <a href="#" className="transition-colors hover:text-accent">
+              Terms
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
