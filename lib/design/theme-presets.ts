@@ -27,6 +27,7 @@ const baseCustomization = (
   galleryLayout: "grid",
   buttonStyle: "luxury-gold",
   animationLevel: "subtle",
+  navigationStyle: "classic-horizontal",
   sections: { ...DEFAULT_SECTIONS },
   ...overrides,
 });
@@ -44,6 +45,7 @@ export const themePresets: Record<ThemePresetId, ThemePresetDefinition> = {
       buttonStyle: "luxury-gold",
       animationLevel: "premium",
       typography: "serif-elegant",
+      navigationStyle: "centered-luxury",
     }),
   },
   "coastal-resort": {
@@ -72,6 +74,7 @@ export const themePresets: Record<ThemePresetId, ThemePresetDefinition> = {
       buttonStyle: "rustic-wood",
       animationLevel: "subtle",
       typography: "serif-classic",
+      navigationStyle: "sidebar",
     }),
   },
   "modern-minimal": {
@@ -86,6 +89,7 @@ export const themePresets: Record<ThemePresetId, ThemePresetDefinition> = {
       buttonStyle: "modern-minimal",
       animationLevel: "off",
       typography: "sans-modern",
+      navigationStyle: "hamburger",
     }),
   },
   "roadside-motel": {

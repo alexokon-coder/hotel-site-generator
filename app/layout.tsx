@@ -11,6 +11,7 @@ import {
 } from "next/font/google";
 import { DemoShell } from "@/components/demo/DemoShell";
 import { hotelConfig } from "@/hotel.config";
+import { ThemePresetManager } from "@/lib/design/ThemePresetManager";
 import { generateThemeStylesheet } from "@/lib/themes";
 import "./globals.css";
 
@@ -75,6 +76,8 @@ const fontVariables = [
 
 /** Read from config on every render so theme changes hot-reload in dev. */
 const activeTheme = hotelConfig.theme;
+const defaultNavStyle =
+  ThemePresetManager.getDefaultFromConfig().customization.navigationStyle;
 
 export const metadata: Metadata = {
   title: "YOUR BUSINESS NAME | Premium Hotel Website Preview",
@@ -90,6 +93,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme={activeTheme}
+      data-nav-style={defaultNavStyle}
       className={`${fontVariables} antialiased`}
       suppressHydrationWarning
     >

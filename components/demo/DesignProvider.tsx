@@ -68,8 +68,20 @@ export function DesignProvider({ children }: { children: ReactNode }) {
 
     const stored = loadStoredState();
     if (stored) {
-      setState(stored);
-      applyDesignToDocument(stored);
+      const preset = ThemePresetManager.getPreset(stored.presetId);
+      const normalized: DesignState = {
+        presetId: stored.presetId,
+        customization: {
+          ...preset.defaultCustomization,
+          ...stored.customization,
+          sections: {
+            ...preset.defaultCustomization.sections,
+            ...stored.customization.sections,
+          },
+        },
+      };
+      setState(normalized);
+      applyDesignToDocument(normalized);
     } else {
       applyDesignToDocument(state);
     }

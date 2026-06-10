@@ -11,6 +11,7 @@ import {
   DEMO_MAP_ADDRESS,
   DEMO_REVIEW_SOURCE,
 } from "@/lib/demo-content";
+import { SiteHeader } from "@/components/SiteHeader";
 import { resolveImage } from "@/lib/images";
 import { useDesign } from "@/components/demo/DesignProvider";
 
@@ -79,7 +80,7 @@ const heroCarouselImages = [
 
 export function HotelSite() {
   const { customization } = useDesign();
-  const { sections: visibility, heroLayout } = customization;
+  const { sections: visibility, heroLayout, navigationStyle } = customization;
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -99,28 +100,11 @@ export function HotelSite() {
 
   return (
     <div className="theme-page font-sans">
-      <header className="theme-nav fixed top-0 z-50 w-full">
-        <nav className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
-          <div className="flex min-w-0 items-center gap-3">
-            <a href="#" className="demo-logo-placeholder shrink-0" aria-label={name}>
-              YOUR LOGO
-            </a>
-            <span className="demo-site-badge hidden sm:inline">{DEMO_BUSINESS_NAME}</span>
-          </div>
-          <ul className="hidden items-center gap-8 md:flex">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} className="theme-nav-link text-sm">
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <a href="#book" className="theme-btn-nav shrink-0 text-xs">
-            Check Availability
-          </a>
-        </nav>
-      </header>
+      <SiteHeader
+        businessName={name}
+        navLinks={navLinks}
+        navigationStyle={navigationStyle ?? "classic-horizontal"}
+      />
 
       {/* Hero */}
       <section className="theme-hero layout-hero relative flex items-center justify-center">

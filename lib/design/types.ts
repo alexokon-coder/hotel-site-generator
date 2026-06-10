@@ -45,6 +45,12 @@ export type TypographyStyle =
 
 export type AnimationLevel = "off" | "subtle" | "premium";
 
+export type NavigationStyle =
+  | "classic-horizontal"
+  | "centered-luxury"
+  | "sidebar"
+  | "hamburger";
+
 export type SectionVisibility = {
   reviews: boolean;
   attractions: boolean;
@@ -65,6 +71,7 @@ export type CustomizationState = {
   galleryLayout: GalleryLayout;
   buttonStyle: ButtonStyle;
   animationLevel: AnimationLevel;
+  navigationStyle: NavigationStyle;
   sections: SectionVisibility;
 };
 

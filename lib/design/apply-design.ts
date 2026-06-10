@@ -157,6 +157,7 @@ export function applyDesignToDocument(state: DesignState): ResolvedDesign {
   html.setAttribute("data-gallery-layout", state.customization.galleryLayout);
   html.setAttribute("data-button-style", state.customization.buttonStyle);
   html.setAttribute("data-animation", state.customization.animationLevel);
+  html.setAttribute("data-nav-style", state.customization.navigationStyle);
   html.setAttribute("data-typography", resolved.typography);
 
   if (resolved.paletteActive) {
@@ -190,6 +191,7 @@ export function clearDemoDesignFromDocument(defaultTheme: ThemeName): void {
   html.removeAttribute("data-gallery-layout");
   html.removeAttribute("data-button-style");
   html.removeAttribute("data-animation");
+  html.removeAttribute("data-nav-style");
   html.removeAttribute("data-typography");
   html.removeAttribute("data-palette-active");
 

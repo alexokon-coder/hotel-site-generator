@@ -15,6 +15,7 @@ import type {
   ButtonStyle,
   GalleryLayout,
   HeroLayout,
+  NavigationStyle,
   RoomCardLayout,
 } from "@/lib/design/types";
 import { CollapsibleSection, ContextSelect, DemoPanel } from "./demo-ui";
@@ -31,6 +32,13 @@ const HERO_OPTIONS: { value: HeroLayout; label: string }[] = [
   { value: "booking-focused", label: "Booking Focused" },
   { value: "image-carousel", label: "Image Carousel" },
   { value: "editorial", label: "Editorial" },
+];
+
+const NAV_OPTIONS: { value: NavigationStyle; label: string }[] = [
+  { value: "classic-horizontal", label: "Classic Horizontal" },
+  { value: "centered-luxury", label: "Centered Luxury" },
+  { value: "sidebar", label: "Sidebar" },
+  { value: "hamburger", label: "Hamburger" },
 ];
 
 const ROOM_OPTIONS: { value: RoomCardLayout; label: string }[] = [
@@ -125,6 +133,12 @@ export function CustomizePanel({ onClose, onReset }: CustomizePanelProps) {
             value={customization.heroLayout}
             options={HERO_OPTIONS}
             onChange={(v) => updateCustomization({ heroLayout: v })}
+          />
+          <ContextSelect
+            label="Navigation Style"
+            value={customization.navigationStyle}
+            options={NAV_OPTIONS}
+            onChange={(v) => updateCustomization({ navigationStyle: v })}
           />
           <ContextSelect
             label="Room Layout"

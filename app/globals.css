@@ -573,6 +573,296 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   Navigation style variants (data-nav-style on <html>)
+   ══════════════════════════════════════════════════════════════ */
+
+.layout-nav-inner {
+  position: relative;
+}
+
+.layout-nav-toggle,
+.layout-nav-backdrop,
+.layout-nav-sidebar,
+.layout-nav-drawer {
+  display: none;
+}
+
+.layout-nav-toggle {
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--nav-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--nav-text);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.layout-nav-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 18px;
+}
+
+.layout-nav-icon-bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  border-radius: 1px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.layout-nav-icon-bar--open:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.layout-nav-icon-bar--open:nth-child(2) {
+  opacity: 0;
+}
+
+.layout-nav-icon-bar--open:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.layout-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.layout-nav-backdrop--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.layout-nav-sidebar,
+.layout-nav-drawer {
+  position: fixed;
+  z-index: 60;
+  flex-direction: column;
+  background: var(--nav-background);
+  border-color: var(--nav-border);
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+
+.layout-nav-sidebar {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(300px, 86vw);
+  padding: 1.5rem;
+  border-right: 1px solid var(--nav-border);
+  transform: translateX(-100%);
+}
+
+.layout-nav-sidebar--open {
+  transform: translateX(0);
+}
+
+.layout-nav-drawer {
+  top: 0;
+  left: 0;
+  right: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--nav-border);
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.layout-nav-drawer--open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.layout-nav-panel-head,
+.layout-nav-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.layout-nav-panel-close {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--nav-link);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.layout-nav-panel-links,
+.layout-nav-drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.layout-nav-panel-link,
+.layout-nav-drawer-link {
+  padding: 0.75rem 0;
+  font-size: 0.9375rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--nav-link);
+  border-bottom: 1px solid color-mix(in srgb, var(--nav-border) 60%, transparent);
+  transition: color 0.2s ease;
+}
+
+.layout-nav-panel-link:hover,
+.layout-nav-drawer-link:hover {
+  color: var(--accent-light);
+}
+
+.layout-nav-panel-cta,
+.layout-nav-drawer-cta {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+/* Classic horizontal */
+html[data-nav-style="classic-horizontal"] .layout-nav-classic-links {
+  display: flex;
+}
+
+html[data-nav-style="classic-horizontal"] .layout-nav-centered {
+  display: none !important;
+}
+
+@media (max-width: 1023px) {
+  html[data-nav-style="classic-horizontal"] .layout-nav-classic-links {
+    display: none !important;
+  }
+
+  html[data-nav-style="classic-horizontal"] .layout-nav-toggle {
+    display: flex;
+  }
+
+  html[data-nav-style="classic-horizontal"] .layout-nav-backdrop {
+    display: block;
+  }
+
+  html[data-nav-style="classic-horizontal"] .layout-nav-drawer {
+    display: flex;
+  }
+}
+
+/* Centered luxury */
+html[data-nav-style="centered-luxury"] .layout-nav-brand {
+  display: none;
+}
+
+html[data-nav-style="centered-luxury"] .layout-nav-classic-links {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  html[data-nav-style="centered-luxury"] .layout-nav-centered {
+    display: flex;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    max-width: min(72vw, 52rem);
+  }
+
+  html[data-nav-style="centered-luxury"] .layout-nav-centered-logo {
+    margin: 0 1.25rem;
+  }
+
+  html[data-nav-style="centered-luxury"] .layout-nav-centered-left,
+  html[data-nav-style="centered-luxury"] .layout-nav-centered-right {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  html[data-nav-style="centered-luxury"] .layout-nav-brand {
+    display: flex;
+  }
+
+  html[data-nav-style="centered-luxury"] .layout-nav-centered {
+    display: none !important;
+  }
+
+  html[data-nav-style="centered-luxury"] .layout-nav-toggle {
+    display: flex;
+  }
+
+  html[data-nav-style="centered-luxury"] .layout-nav-backdrop {
+    display: block;
+  }
+
+  html[data-nav-style="centered-luxury"] .layout-nav-drawer {
+    display: flex;
+  }
+}
+
+/* Sidebar */
+html[data-nav-style="sidebar"] .layout-nav-classic-links,
+html[data-nav-style="sidebar"] .layout-nav-centered {
+  display: none !important;
+}
+
+html[data-nav-style="sidebar"] .layout-nav-toggle {
+  display: flex;
+  order: -1;
+}
+
+html[data-nav-style="sidebar"] .layout-nav-backdrop {
+  display: block;
+}
+
+html[data-nav-style="sidebar"] .layout-nav-sidebar {
+  display: flex;
+}
+
+html[data-nav-style="sidebar"] .layout-nav-drawer {
+  display: none !important;
+}
+
+/* Hamburger */
+html[data-nav-style="hamburger"] .layout-nav-classic-links,
+html[data-nav-style="hamburger"] .layout-nav-centered {
+  display: none !important;
+}
+
+html[data-nav-style="hamburger"] .layout-nav-cta {
+  display: none;
+}
+
+html[data-nav-style="hamburger"] .layout-nav-toggle {
+  display: flex;
+}
+
+html[data-nav-style="hamburger"] .layout-nav-backdrop {
+  display: block;
+}
+
+html[data-nav-style="hamburger"] .layout-nav-drawer {
+  display: flex;
+}
+
+html[data-nav-style="hamburger"] .layout-nav-sidebar {
+  display: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
    Demo toolbar — enterprise config UI (hidden in print/production)
    ══════════════════════════════════════════════════════════════ */
 
