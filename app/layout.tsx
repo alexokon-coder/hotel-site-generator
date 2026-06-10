@@ -77,7 +77,7 @@ const fontVariables = [
 const activeTheme = hotelConfig.theme;
 
 export const metadata: Metadata = {
-  title: `${hotelConfig.name} | Luxury Boutique Hotel in ${hotelConfig.location.city}`,
+  title: "YOUR BUSINESS NAME | Premium Hotel Website Preview",
   description: hotelConfig.seo.description,
 };
 

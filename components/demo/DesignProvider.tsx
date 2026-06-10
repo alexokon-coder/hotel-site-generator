@@ -53,25 +53,39 @@ function loadStoredState(): DesignState | null {
 const demoEnabled = isDemoToolbarEnabled();
 
 export function DesignProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<DesignState>(() => {
-    if (!demoEnabled) {
-      return ThemePresetManager.getDefaultFromConfig();
-    }
-    return loadStoredState() ?? ThemePresetManager.getDefaultFromConfig();
-  });
+  /** Always match SSR — load localStorage only after mount to avoid hydration mismatch. */
+  const [state, setState] = useState<DesignState>(() =>
+    ThemePresetManager.getDefaultFromConfig()
+  );
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (!demoEnabled) {
       clearDemoDesignFromDocument(hotelConfig.theme);
+      setMounted(true);
       return;
     }
+
+    const stored = loadStoredState();
+    if (stored) {
+      setState(stored);
+      applyDesignToDocument(stored);
+    } else {
+      applyDesignToDocument(state);
+    }
+    setMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !demoEnabled) return;
     applyDesignToDocument(state);
     try {
       localStorage.setItem(DESIGN_STORAGE_KEY, JSON.stringify(state));
     } catch {
       /* ignore quota errors */
     }
-  }, [state]);
+  }, [state, mounted]);
 
   const applyPreset = useCallback(
     (presetId: ThemePresetId, keepCustomizations = false) => {

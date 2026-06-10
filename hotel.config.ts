@@ -14,89 +14,100 @@ import type { ThemeName } from "@/lib/themes";
 export const hotelConfig = {
   // ── Theme ─────────────────────────────────────────────────────
   /** Options: "luxury" | "coastal" | "rustic" | "modern" — save file to apply (hot-reloads in dev) */
-  theme: "coastal" as ThemeName,
+  theme: "luxury" as ThemeName,
 
   // ── Identity ──────────────────────────────────────────────────
-  name: "WoodSpring Suites Olando",
-  legalName: "WoodSpring Suites Orlando",
+  name: "YOUR HOTEL NAME",
+  legalName: "YOUR HOTEL NAME",
 
   location: {
-    /** Shown in the hero eyebrow, e.g. "Orlando East · Near UCF" */
-    display: "Orlando East · Near UCF",
-    street: "1675 Bonneville Dr.",
-    city: "Orlando",
-    state: "FL",
-    zip: "32826",
+    /** Shown in the hero eyebrow, e.g. "Your City · Your Region" */
+    display: "Your Property Location",
+    street: "Your Property Address",
+    city: "Your City",
+    state: "ST",
+    zip: "00000",
     /** Used in the attractions section eyebrow */
-    region: "Orlando",
+    region: "Your Region",
   },
 
   contact: {
-    phone: "(321) 200-1033",
-    phoneTel: "+13212001033",
-    email: "reservations@woodspring.com",
+    phone: "Your Phone Number",
+    phoneTel: "+15555550100",
+    email: "your@email.com",
     checkIn: "3:00 PM",
     checkOut: "11:00 AM",
-    instagram: "https://www.instagram.com/woodspringhotels",
+    instagram: "#",
   },
 
   seo: {
     description:
-      "Extended stay hotel in Orlando, FL — 6 miles from UCF with full in-room kitchens, free WiFi, free parking, and weekly or monthly rates that drop the longer you stay. Smoke-free, pet-friendly, and ranked #1 in guest satisfaction among economy extended stay brands by J.D. Power.",
+      "A customizable hotel website demonstration — showcase your property with premium design, integrated reviews, maps, room types, and a modern booking experience ready for your PMS.",
   },
 
   // ── Images ──────────────────────────────────────────────────────
   images: {
     hero: {
       src: "1566073771259-6a8506099945",
-      alt: "WoodSpring Suites Orlando East UCF extended stay hotel exterior",
+      alt: "Boutique hotel exterior — demonstration imagery",
     },
     bookingCta: {
       src: "1571896349842-33c89424de2d",
-      alt: "Modern extended stay suite with in-room kitchen",
+      alt: "Elegant guest suite — demonstration imagery",
     },
   },
 
   // ── Hero ────────────────────────────────────────────────────────
   hero: {
-    headline: ["Built for Longer Stays,", "Ready From Night One"],
+    headline: ["A Modern Hotel Experience,", "Designed Around Your Brand"],
     description:
-      "Spacious suites with full in-room kitchens, steps from UCF and less than 45 minutes from Disney World and SeaWorld. Nightly, weekly, and monthly rates — with the best value the longer you stay.",
+      "This demonstration shows how an independent hotel, motel, or bed & breakfast can present rooms, amenities, location, reviews, and booking in a polished, trustworthy way — fully customizable for your property.",
   },
 
   // ── Room Types ──────────────────────────────────────────────────
   rooms: [
     {
-      id: "studio",
-      name: "Studio Suite with Full Kitchen",
+      id: "standard",
+      name: "Standard Room",
       description:
-        "Your home base in Orlando — free WiFi, free parking, and a complete in-room kitchen with microwave, two-burner cooktop, full-size refrigerator and freezer, and prep sink. Bi-weekly housekeeping included; additional cleaning available on request.",
-      price: "Weekly Rates Available",
+        "A comfortable, well-appointed room with premium bedding, thoughtful amenities, and a layout designed for restful stays. Ideal for solo travelers and short visits.",
+      price: "From $149 / night",
       image: {
         src: "1631049307264-da0ec9d70304",
-        alt: "Spacious studio suite with sleeping and living area",
+        alt: "Standard hotel room with queen bed and sitting area",
       },
     },
     {
-      id: "accessible",
-      name: "Accessible Studio Suite",
+      id: "deluxe",
+      name: "Deluxe Room",
       description:
-        "Fully accessible studio with in-room kitchen, braille-coded exits, accessible registration desk, ramps, visual alarms, and a clear route from the public entrance to your room. Every comfort of our standard suite, designed without compromise.",
-      price: "Weekly Rates Available",
+        "Extra space and upgraded finishes — sitting area, enhanced bath amenities, and views that make every stay feel special. Perfect for couples and business travelers.",
+      price: "From $189 / night",
       image: {
         src: "1590490360182-c33d57733427",
-        alt: "Accessible extended stay suite with open layout",
+        alt: "Deluxe hotel room with upgraded furnishings",
       },
     },
     {
-      id: "pet-friendly",
-      name: "Pet-Friendly Studio Suite",
+      id: "premium-suite",
+      name: "Premium Suite",
       description:
-        "Bring your dog — up to two per room, 50 lbs max. Same full kitchen and suite layout as our standard studio. Pet fee of $15 per pet per night; $50 non-refundable deposit per stay. Dogs only — no cats.",
-      price: "Weekly Rates Available",
+        "Separate living and sleeping areas, premium linens, and refined details throughout. Designed for guests who expect more room, more comfort, and a more memorable stay.",
+      price: "From $249 / night",
       image: {
         src: "1583337130417-3346a1be7dee",
-        alt: "Comfortable suite welcoming guests traveling with dogs",
+        alt: "Premium suite with separate living area",
+      },
+    },
+    {
+      id: "family-suite",
+      name: "Family Suite",
+      description:
+        "Spacious accommodations for families and small groups — flexible sleeping arrangements, generous square footage, and amenities that make everyone comfortable.",
+      price: "From $279 / night",
+      image: {
+        src: "1566073771259-6a8506099945",
+        alt: "Family suite with ample space for guests",
       },
     },
   ],
@@ -144,43 +155,43 @@ export const hotelConfig = {
   // ── Local Attractions ─────────────────────────────────────────────
   attractions: [
     {
-      name: "University of Central Florida",
+      name: "Nearby Attraction",
       description:
-        "Just 6 miles away — ideal for campus visits, orientation weekends, move-in weeks, and semester-long stays. Easy access via US-408 and US-50.",
-      distance: "6 miles",
+        "Highlight a landmark, museum, or destination near your property. This section is customized with real local recommendations for each client.",
+      distance: "0.5 miles",
       image: {
         src: "1562774053-701939374585",
-        alt: "University campus grounds near Orlando",
+        alt: "Local attraction — demonstration placeholder",
       },
     },
     {
-      name: "Walt Disney World",
+      name: "Downtown District",
       description:
-        "29 miles to the magic — close enough for day trips and family visits, with the comfort of a full kitchen and quiet suite waiting when you return.",
-      distance: "29 miles",
+        "Showcase shopping, dining, and nightlife in your area. Help guests discover the best of your destination before they arrive.",
+      distance: "1.2 miles",
       image: {
         src: "1464366400600-7168b8af9bc3",
-        alt: "Orlando area theme park skyline at dusk",
+        alt: "Downtown area — demonstration placeholder",
       },
     },
     {
-      name: "SeaWorld Orlando",
+      name: "Natural Landmark",
       description:
-        "17 miles from your suite door. Spend the day at the park, then come back to space, privacy, and a kitchen that works around your family's schedule.",
-      distance: "17 miles",
+        "Parks, beaches, trails, and scenic overlooks — demonstrate how location-based content builds excitement and helps guests plan their stay.",
+      distance: "3 miles",
       image: {
         src: "1582719508461-905c673771fd",
-        alt: "Marine life and aquatic park experience in Orlando",
+        alt: "Natural scenery — demonstration placeholder",
       },
     },
     {
-      name: "Orlando International Airport",
+      name: "Local Recommendation",
       description:
-        "11.8 miles — a straightforward drive for arrivals and departures. Also convenient to Central Florida Regional (16.2 mi) and Daytona Beach Intl (38.5 mi).",
-      distance: "11.8 miles",
+        "Curated picks from your team — restaurants, events, and hidden gems that set your property apart and build guest loyalty.",
+      distance: "5 miles",
       image: {
         src: "1436491865332-7a61a109cc05",
-        alt: "Airport terminal and travel connections",
+        alt: "Local destination — demonstration placeholder",
       },
     },
   ],
@@ -189,31 +200,31 @@ export const hotelConfig = {
   testimonials: [
     {
       quote:
-        "We booked a month while our daughter started at UCF. The kitchen saved us a fortune, parking was free, and having laundry on-site meant we packed half of what we planned. Exactly what extended-stay should be.",
-      author: "Patricia & Robert G.",
-      role: "UCF Family Stay · Fall 2025",
+        "Absolutely charming from the moment we arrived. The room was spotless, the breakfast was wonderful, and the hosts made us feel genuinely welcome. We will definitely return.",
+      author: "Alex Okon",
+      role: "Arcadia Bed & Breakfast · Demo Review",
     },
     {
       quote:
-        "Between shifts at the hospital, I needed something simple, clean, and quiet with a real kitchen — not a cramped room with a mini-fridge. Weekly rates beat anything I found on the booking apps.",
-      author: "Danielle M.",
-      role: "Travel Healthcare Professional",
+        "A hidden gem in Arcadia. Beautifully kept property, comfortable beds, and a peaceful atmosphere. The porch in the evening was the perfect way to unwind after exploring town.",
+      author: "Margaret S.",
+      role: "Arcadia Bed & Breakfast · Demo Review",
     },
     {
       quote:
-        "Three-week contract, two dogs, no lease to sign. The pet policy was clear upfront, the suite was bigger than expected, and I could actually cook after long days on site. Already rebooked for my next project.",
-      author: "Marcus T.",
-      role: "Contractor · Returning Guest",
+        "Exceeded our expectations. Thoughtful details throughout, delicious homemade breakfast, and a location that made it easy to explore the area. Highly recommend for a relaxing getaway.",
+      author: "James & Linda P.",
+      role: "Arcadia Bed & Breakfast · Demo Review",
     },
   ],
 
   // ── Section Copy (optional overrides) ───────────────────────────
   sections: {
     rooms: {
-      eyebrow: "Suites",
+      eyebrow: "Accommodations",
       title: "Room Types",
       description:
-        "Every suite is designed for real life on the road — more space, a full kitchen, and rates that reward longer stays. No lease required. No hidden booking fees. Just book and move in.",
+        "Showcase your room categories with professional photography, clear descriptions, and pricing — customized to match your property and brand.",
     },
     amenities: {
       eyebrow: "Everything You Need",
@@ -222,18 +233,18 @@ export const hotelConfig = {
         "We stripped away the fluff and kept what extended-stay guests actually use — kitchens, laundry, parking, WiFi, and a fitness center. Ranked #1 in guest satisfaction among economy extended stay brands by J.D. Power.",
     },
     attractions: {
-      eyebrow: "Orlando",
+      eyebrow: "Your Property Location",
       title: "Nearby Attractions",
       description:
-        "Centrally located near US-408 and US-50, with UCF, theme parks, and three major airports all within easy reach. Stay for work, school, or adventure — your suite is the constant.",
+        "Demonstrate how location-based content — nearby attractions, local recommendations, and area highlights — helps guests plan their stay and positions your property as the ideal base.",
     },
     booking: {
-      eyebrow: "Stay Longer, Save More",
-      title: "Book Your Suite at {name}",
+      eyebrow: "Reservations",
+      title: "Plan Your Stay at {name}",
       description:
-        "Nightly, weekly, and monthly rates available — the longer you stay, the lower your rate. Book direct for the best price, no booking fees, and no lease required.",
+        "A welcoming reservation experience designed to help guests plan their stay with confidence — clear, simple, and built for direct bookings.",
       formDescription:
-        "Send your dates and we will confirm availability promptly. For the fastest answer, call our front desk at (321) 200-1033. Office hours available on request. Please note: this property does not accept cash payment.",
+        "Transform your website into a powerful guest acquisition tool with a modern reservation experience built to increase direct booking opportunities.",
     },
   },
 } as const;
