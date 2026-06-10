@@ -79,6 +79,7 @@ export type ResolvedDesign = {
   customization: CustomizationState;
   colorOverrides: Record<string, string>;
   typography: TypographyStyle;
+  paletteActive: boolean;
 };
 
 export type ThemePresetDefinition = {

@@ -1,4 +1,9 @@
 import type { ThemeName } from "@/lib/themes";
+import {
+  buildPaletteCssVariables,
+  buildPaletteScopeCss,
+  isFullPalette,
+} from "./palette-colors";
 import { ThemePresetManager } from "./ThemePresetManager";
 import type {
   CustomizationState,
@@ -75,20 +80,31 @@ export function resolveDesign(state: DesignState): ResolvedDesign {
     preset.defaultCustomization.typography ??
     "serif-elegant";
 
-  const colorOverrides: Record<string, string> = {};
+  const { primaryColor, secondaryColor, accentColor } = state.customization;
+  const paletteActive = isFullPalette(
+    primaryColor,
+    secondaryColor,
+    accentColor
+  );
 
-  if (state.customization.primaryColor) {
-    colorOverrides["--foreground"] = state.customization.primaryColor;
-    colorOverrides["--heading-on-surface"] = state.customization.primaryColor;
-  }
-  if (state.customization.secondaryColor) {
-    colorOverrides["--surface"] = state.customization.secondaryColor;
-    colorOverrides["--background"] = state.customization.secondaryColor;
-  }
-  if (state.customization.accentColor) {
-    colorOverrides["--accent"] = state.customization.accentColor;
-    colorOverrides["--eyebrow-color"] = state.customization.accentColor;
-    colorOverrides["--btn-primary-bg"] = state.customization.accentColor;
+  const colorOverrides: Record<string, string> = paletteActive
+    ? buildPaletteCssVariables(primaryColor!, secondaryColor!, accentColor!)
+    : {};
+
+  if (!paletteActive) {
+    if (primaryColor) {
+      colorOverrides["--foreground"] = primaryColor;
+      colorOverrides["--heading-on-surface"] = primaryColor;
+    }
+    if (secondaryColor) {
+      colorOverrides["--surface"] = secondaryColor;
+      colorOverrides["--background"] = secondaryColor;
+    }
+    if (accentColor) {
+      colorOverrides["--accent"] = accentColor;
+      colorOverrides["--eyebrow-color"] = accentColor;
+      colorOverrides["--btn-primary-bg"] = accentColor;
+    }
   }
 
   Object.assign(colorOverrides, BUTTON_STYLE_MAP[state.customization.buttonStyle]);
@@ -105,15 +121,25 @@ export function resolveDesign(state: DesignState): ResolvedDesign {
     customization: state.customization,
     colorOverrides,
     typography,
+    paletteActive,
   };
 }
 
-export function buildOverrideCss(overrides: Record<string, string>): string {
-  if (Object.keys(overrides).length === 0) return "";
-  const block = Object.entries(overrides)
-    .map(([key, value]) => `  ${key}: ${value};`)
-    .join("\n");
-  return `html[data-demo-active="true"] {\n${block}\n}`;
+export function buildOverrideCss(
+  overrides: Record<string, string>,
+  paletteActive = false
+): string {
+  if (Object.keys(overrides).length === 0 && !paletteActive) return "";
+
+  const varBlock =
+    Object.keys(overrides).length > 0
+      ? `html[data-demo-active="true"] {\n${Object.entries(overrides)
+          .map(([key, value]) => `  ${key}: ${value};`)
+          .join("\n")}\n}`
+      : "";
+
+  const scopeBlock = paletteActive ? buildPaletteScopeCss() : "";
+  return [varBlock, scopeBlock].filter(Boolean).join("\n\n");
 }
 
 export function applyDesignToDocument(state: DesignState): ResolvedDesign {
@@ -133,13 +159,22 @@ export function applyDesignToDocument(state: DesignState): ResolvedDesign {
   html.setAttribute("data-animation", state.customization.animationLevel);
   html.setAttribute("data-typography", resolved.typography);
 
+  if (resolved.paletteActive) {
+    html.setAttribute("data-palette-active", "true");
+  } else {
+    html.removeAttribute("data-palette-active");
+  }
+
   let styleEl = document.getElementById("demo-design-overrides");
   if (!styleEl) {
     styleEl = document.createElement("style");
     styleEl.id = "demo-design-overrides";
     document.head.appendChild(styleEl);
   }
-  styleEl.textContent = buildOverrideCss(resolved.colorOverrides);
+  styleEl.textContent = buildOverrideCss(
+    resolved.colorOverrides,
+    resolved.paletteActive
+  );
 
   return resolved;
 }
@@ -156,6 +191,7 @@ export function clearDemoDesignFromDocument(defaultTheme: ThemeName): void {
   html.removeAttribute("data-button-style");
   html.removeAttribute("data-animation");
   html.removeAttribute("data-typography");
+  html.removeAttribute("data-palette-active");
 
   document.getElementById("demo-design-overrides")?.remove();
 }
