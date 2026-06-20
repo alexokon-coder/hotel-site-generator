@@ -11,7 +11,7 @@ import {
 } from "react";
 import { hotelConfig } from "@/hotel.config";
 import { applyDesignToDocument, clearDemoDesignFromDocument } from "@/lib/design/apply-design";
-import { DESIGN_STORAGE_KEY, isDemoToolbarEnabled } from "@/lib/design/demo-env";
+import { DESIGN_STORAGE_KEY } from "@/lib/design/demo-env";
 import { ThemePresetManager } from "@/lib/design/ThemePresetManager";
 import type {
   CustomizationState,
@@ -28,15 +28,15 @@ type DesignContextValue = {
 
 const DesignContext = createContext<DesignContextValue | null>(null);
 
-/** Production site matches original sections (no demo-only gallery/faq/map/about). */
-export const PRODUCTION_SECTIONS: CustomizationState["sections"] = {
+/** Shown when customization is disabled (client preview / production). */
+export const CLIENT_SECTIONS: CustomizationState["sections"] = {
   reviews: true,
   attractions: true,
   amenities: true,
-  gallery: false,
-  faq: false,
-  map: false,
-  about: false,
+  gallery: true,
+  faq: true,
+  map: true,
+  about: true,
 };
 
 function loadStoredState(): DesignState | null {
@@ -50,7 +50,9 @@ function loadStoredState(): DesignState | null {
   }
 }
 
-const demoEnabled = isDemoToolbarEnabled();
+function isCustomizationEnabled(): boolean {
+  return hotelConfig.previewMode === "demo";
+}
 
 export function DesignProvider({ children }: { children: ReactNode }) {
   /** Always match SSR — load localStorage only after mount to avoid hydration mismatch. */
@@ -60,8 +62,13 @@ export function DesignProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!demoEnabled) {
+    if (!isCustomizationEnabled()) {
       clearDemoDesignFromDocument(hotelConfig.theme);
+      try {
+        localStorage.removeItem(DESIGN_STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
       setMounted(true);
       return;
     }
@@ -90,7 +97,7 @@ export function DesignProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!mounted || !demoEnabled) return;
+    if (!mounted || !isCustomizationEnabled()) return;
     applyDesignToDocument(state);
     try {
       localStorage.setItem(DESIGN_STORAGE_KEY, JSON.stringify(state));
@@ -119,7 +126,7 @@ export function DesignProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const resetToConfigDefault = useCallback(() => {
-    if (!demoEnabled) return;
+    if (!isCustomizationEnabled()) return;
     const defaultState = ThemePresetManager.getDefaultFromConfig();
     setState(defaultState);
     localStorage.removeItem(DESIGN_STORAGE_KEY);
@@ -145,12 +152,12 @@ export function useDesign() {
   const ctx = useContext(DesignContext);
   const defaultState = ThemePresetManager.getDefaultFromConfig();
 
-  if (!ctx || !demoEnabled) {
+  if (!ctx || !isCustomizationEnabled()) {
     return {
       state: defaultState,
       customization: {
         ...defaultState.customization,
-        sections: PRODUCTION_SECTIONS,
+        sections: CLIENT_SECTIONS,
       },
       applyPreset: () => undefined,
       updateCustomization: () => undefined,

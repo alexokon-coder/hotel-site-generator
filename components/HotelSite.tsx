@@ -16,6 +16,7 @@ import { resolveImage } from "@/lib/images";
 import { useDesign } from "@/components/demo/DesignProvider";
 
 function DemoLabel({ children }: { children: string }) {
+  if (hotelConfig.previewMode !== "demo") return null;
   return <p className="demo-content-label">{children}</p>;
 }
 
@@ -79,9 +80,14 @@ const heroCarouselImages = [
 ];
 
 export function HotelSite() {
+  const isDemo = hotelConfig.previewMode === "demo";
   const { customization } = useDesign();
   const { sections: visibility, heroLayout, navigationStyle } = customization;
   const [mounted, setMounted] = useState(false);
+
+  const mapAddress = isDemo
+    ? DEMO_MAP_ADDRESS.full
+    : `${location.street}, ${location.city}, ${location.state} ${location.zip}`;
 
   useEffect(() => {
     setMounted(true);
@@ -156,7 +162,7 @@ export function HotelSite() {
               { href: "#rooms", label: "View Rooms", variant: "outline" },
               { href: "#book", label: "Check Availability", variant: "primary" },
             ]}
-            footnote={DEMO_CTA_TECH_NOTE}
+            footnote={isDemo ? DEMO_CTA_TECH_NOTE : undefined}
           />
         </div>
 
@@ -361,20 +367,28 @@ export function HotelSite() {
         <section id="testimonials" className="theme-section theme-section-alt">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mb-16 text-center">
-              <p className="theme-eyebrow mb-3 text-sm uppercase">Example Review Integration</p>
-              <h2 className="theme-heading theme-h2 theme-heading-light">Sample Guest Reviews</h2>
-              <DemoLabel>Example review integration shown for demonstration purposes.</DemoLabel>
-              <p className="demo-review-source">
-                Reviews demonstrated using{" "}
-                <a
-                  href={DEMO_REVIEW_SOURCE.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {DEMO_REVIEW_SOURCE.name}
-                </a>
-                . Not affiliated with {name}.
+              <p className="theme-eyebrow mb-3 text-sm uppercase">
+                {isDemo ? "Example Review Integration" : "Guest Stories"}
               </p>
+              <h2 className="theme-heading theme-h2 theme-heading-light">
+                {isDemo ? "Sample Guest Reviews" : "What Our Guests Say"}
+              </h2>
+              {isDemo && (
+                <>
+                  <DemoLabel>Example review integration shown for demonstration purposes.</DemoLabel>
+                  <p className="demo-review-source">
+                    Reviews demonstrated using{" "}
+                    <a
+                      href={DEMO_REVIEW_SOURCE.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {DEMO_REVIEW_SOURCE.name}
+                    </a>
+                    . Not affiliated with {name}.
+                  </p>
+                </>
+              )}
             </div>
             <div className="theme-section-grid grid md:grid-cols-3">
               {testimonials.map((t) => (
@@ -395,7 +409,9 @@ export function HotelSite() {
                         >
                           {t.author}
                         </p>
-                        <p className="text-xs text-muted-subtle">{t.role}</p>
+                        {isDemo && (
+                          <p className="text-xs text-muted-subtle">{t.role}</p>
+                        )}
                       </cite>
                     </footer>
                   </div>
@@ -413,7 +429,7 @@ export function HotelSite() {
             <div className="mb-12 text-center">
               <p className="theme-eyebrow mb-3 text-sm uppercase">Questions</p>
               <h2 className="theme-heading theme-h2 theme-heading-light">Frequently Asked</h2>
-              <DemoLabel>Sample FAQ Content</DemoLabel>
+              {isDemo && <DemoLabel>Sample FAQ Content</DemoLabel>}
             </div>
             <div className="space-y-4">
               {DEMO_FAQ_ITEMS.map((item) => (
@@ -425,7 +441,9 @@ export function HotelSite() {
                 </details>
               ))}
             </div>
-            <p className="demo-content-label mt-8 text-center">{DEMO_FAQ_FOOTNOTE}</p>
+            {isDemo && (
+              <p className="demo-content-label mt-8 text-center">{DEMO_FAQ_FOOTNOTE}</p>
+            )}
           </div>
         </section>
       )}
@@ -437,16 +455,18 @@ export function HotelSite() {
             <div className="mb-10 text-center">
               <p className="theme-eyebrow mb-3 text-sm uppercase">Location</p>
               <h2 className="theme-heading theme-h2 theme-heading-light">Find Us</h2>
-              <p className="mx-auto mt-4 max-w-xl text-muted">{DEMO_MAP_ADDRESS.full}</p>
-              <DemoLabel>Example map integration. Your property location can be displayed here.</DemoLabel>
+              <p className="mx-auto mt-4 max-w-xl text-muted">{mapAddress}</p>
+              {isDemo && (
+                <DemoLabel>Example map integration. Your property location can be displayed here.</DemoLabel>
+              )}
             </div>
             <div className="theme-card overflow-hidden">
               <iframe
-                title="Example map — Arcadia Bed & Breakfast demonstration"
+                title={isDemo ? "Example map — demonstration" : `Map of ${name}`}
                 className="h-[360px] w-full border-0 grayscale-[30%]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(DEMO_MAP_ADDRESS.full)}&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&output=embed`}
               />
             </div>
           </div>
@@ -480,7 +500,7 @@ export function HotelSite() {
               { href: "#book", label: "Check Availability", variant: "primary" },
               { href: `tel:${contact.phoneTel}`, label: contact.phone, variant: "outline" },
             ]}
-            footnote={DEMO_CTA_TECH_NOTE}
+            footnote={isDemo ? DEMO_CTA_TECH_NOTE : undefined}
           />
         </div>
       </section>
@@ -646,8 +666,12 @@ export function HotelSite() {
       <footer className="theme-footer py-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row lg:px-8">
           <div className="flex flex-col items-center gap-2 md:items-start">
-            <span className="demo-logo-placeholder text-xs">YOUR LOGO</span>
-            <span className="demo-site-badge">{DEMO_BUSINESS_NAME}</span>
+            {isDemo ? (
+              <span className="demo-logo-placeholder text-xs">YOUR LOGO</span>
+            ) : (
+              <span className="theme-nav-logo text-xs uppercase">{name}</span>
+            )}
+            {isDemo && <span className="demo-site-badge">{DEMO_BUSINESS_NAME}</span>}
           </div>
           <p className="text-center text-xs text-muted-on-dark opacity-80">
             © {new Date().getFullYear()} {legalName}. All rights reserved.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { hotelConfig } from "@/hotel.config";
 import { isDemoToolbarEnabled } from "@/lib/design/demo-env";
 import { useDesign } from "./DesignProvider";
 import { CustomizePanel } from "./CustomizePanel";
@@ -10,6 +11,18 @@ import { ThemePanel } from "./ThemePanel";
 type OpenPanel = "theme" | "customize" | null;
 
 export function DemoToolbar() {
+  if (hotelConfig.previewMode !== "demo") {
+    return null;
+  }
+
+  if (!isDemoToolbarEnabled()) {
+    return null;
+  }
+
+  return <DemoToolbarInner />;
+}
+
+function DemoToolbarInner() {
   const [openPanel, setOpenPanel] = useState<OpenPanel>(null);
   const { resetToConfigDefault } = useDesign();
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -17,10 +30,6 @@ export function DemoToolbar() {
   const close = useCallback(() => setOpenPanel(null), []);
 
   useClickOutside(toolbarRef, close, openPanel !== null);
-
-  if (!isDemoToolbarEnabled()) {
-    return null;
-  }
 
   const open = (panel: OpenPanel) => {
     setOpenPanel((current) => (current === panel ? null : panel));

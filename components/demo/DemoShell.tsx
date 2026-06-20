@@ -1,14 +1,22 @@
 "use client";
 
 import type { ReactNode } from "react";
+import type { PreviewMode } from "@/hotel.config";
 import { DesignProvider } from "./DesignProvider";
 import { DemoToolbar } from "./DemoToolbar";
 
-export function DemoShell({ children }: { children: ReactNode }) {
+type DemoShellProps = {
+  children: ReactNode;
+  previewMode: PreviewMode;
+};
+
+export function DemoShell({ children, previewMode }: DemoShellProps) {
+  const showToolbar = previewMode === "demo";
+
   return (
     <DesignProvider>
       {children}
-      <DemoToolbar />
+      {showToolbar ? <DemoToolbar /> : null}
     </DesignProvider>
   );
 }

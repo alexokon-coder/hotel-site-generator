@@ -1,3 +1,5 @@
+import { hotelConfig } from "@/hotel.config";
+
 /**
  * Demo toolbar visibility.
  * Print/PDF: hidden via CSS (@media print) — not controlled here.
@@ -40,6 +42,10 @@ function isDemoVercelProjectDeployment(): boolean {
 }
 
 export function isDemoToolbarEnabled(): boolean {
+  if (hotelConfig.previewMode !== "demo") {
+    return false;
+  }
+
   if (process.env.NEXT_PUBLIC_DEMO_TOOLBAR === "false") {
     return false;
   }

@@ -1,5 +1,7 @@
 import type { ThemeName } from "@/lib/themes";
 
+export type PreviewMode = "demo" | "client";
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *  HOTEL CONFIG — Edit this file to customize the entire website.
@@ -15,6 +17,9 @@ export const hotelConfig = {
   // ── Theme ─────────────────────────────────────────────────────
   /** Options: "luxury" | "coastal" | "rustic" | "modern" — save file to apply (hot-reloads in dev) */
   theme: "luxury" as ThemeName,
+
+  /** "demo" = toolbar + demo labels | "client" = polished preview, no demo chrome */
+  previewMode: "demo" as PreviewMode,
 
   // ── Identity ──────────────────────────────────────────────────
   name: "YOUR HOTEL NAME",

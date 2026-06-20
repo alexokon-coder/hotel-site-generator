@@ -78,6 +78,7 @@ const fontVariables = [
 const activeTheme = hotelConfig.theme;
 const defaultNavStyle =
   ThemePresetManager.getDefaultFromConfig().customization.navigationStyle;
+const previewMode = hotelConfig.previewMode;
 
 export const metadata: Metadata = {
   title: "YOUR BUSINESS NAME | Premium Hotel Website Preview",
@@ -94,6 +95,7 @@ export default function RootLayout({
       lang="en"
       data-theme={activeTheme}
       data-nav-style={defaultNavStyle}
+      data-preview-mode={previewMode}
       className={`${fontVariables} antialiased`}
       suppressHydrationWarning
     >
@@ -104,7 +106,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen">
-        <DemoShell>{children}</DemoShell>
+        <DemoShell previewMode={previewMode}>{children}</DemoShell>
       </body>
     </html>
   );
