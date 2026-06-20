@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { formatConfigText, hotelConfig } from "@/hotel.config";
+import { useEffect, useMemo, useState } from "react";
+import { formatConfigText } from "@/hotel.config";
 import {
   DEMO_BUSINESS_NAME,
   DEMO_FAQ_FOOTNOTE,
@@ -14,9 +14,11 @@ import {
 import { SiteHeader } from "@/components/SiteHeader";
 import { resolveImage } from "@/lib/images";
 import { useDesign } from "@/components/demo/DesignProvider";
+import { useHotelSiteConfig } from "@/lib/hotel-context";
 
 function DemoLabel({ children }: { children: string }) {
-  if (hotelConfig.previewMode !== "demo") return null;
+  const { isDemo } = useHotelSiteConfig();
+  if (!isDemo) return null;
   return <p className="demo-content-label">{children}</p>;
 }
 
@@ -51,39 +53,51 @@ function DualCtaGroup({
   );
 }
 
-const {
-  name,
-  location,
-  contact,
-  images,
-  hero,
-  rooms,
-  amenities,
-  attractions,
-  testimonials,
-  sections,
-  legalName,
-  seo,
-} = hotelConfig;
-
-const galleryImages = [
-  images.hero,
-  images.bookingCta,
-  ...rooms.map((r) => r.image),
-  ...attractions.slice(0, 2).map((a) => a.image),
-];
-
-const heroCarouselImages = [
-  images.hero,
-  images.bookingCta,
-  ...rooms.slice(0, 2).map((r) => r.image),
-];
-
 export function HotelSite() {
-  const isDemo = hotelConfig.previewMode === "demo";
+  const { config, isDemo } = useHotelSiteConfig();
+  const {
+    name,
+    location,
+    contact,
+    images,
+    hero,
+    rooms,
+    amenities,
+    attractions,
+    testimonials,
+    sections,
+    legalName,
+    seo,
+    faq,
+    logo,
+    navigationStyle: configNavStyle,
+  } = config;
+
   const { customization } = useDesign();
-  const { sections: visibility, heroLayout, navigationStyle } = customization;
+  const { sections: visibility, heroLayout, navigationStyle: designNavStyle } =
+    customization;
   const [mounted, setMounted] = useState(false);
+
+  const navigationStyle = isDemo
+    ? (designNavStyle ?? "classic-horizontal")
+    : (configNavStyle ?? designNavStyle ?? "classic-horizontal");
+
+  const galleryImages = useMemo(
+    () => [
+      images.hero,
+      images.bookingCta,
+      ...rooms.map((r) => r.image),
+      ...attractions.slice(0, 2).map((a) => a.image),
+    ],
+    [images, rooms, attractions]
+  );
+
+  const heroCarouselImages = useMemo(
+    () => [images.hero, images.bookingCta, ...rooms.slice(0, 2).map((r) => r.image)],
+    [images, rooms]
+  );
+
+  const faqItems = isDemo ? DEMO_FAQ_ITEMS : (faq ?? []);
 
   const mapAddress = isDemo
     ? DEMO_MAP_ADDRESS.full
@@ -109,7 +123,9 @@ export function HotelSite() {
       <SiteHeader
         businessName={name}
         navLinks={navLinks}
-        navigationStyle={navigationStyle ?? "classic-horizontal"}
+        navigationStyle={navigationStyle}
+        isDemo={isDemo}
+        logo={logo}
       />
 
       {/* Hero */}
@@ -409,7 +425,7 @@ export function HotelSite() {
                         >
                           {t.author}
                         </p>
-                        {isDemo && (
+                        {t.role && (
                           <p className="text-xs text-muted-subtle">{t.role}</p>
                         )}
                       </cite>
@@ -423,7 +439,7 @@ export function HotelSite() {
       )}
 
       {/* FAQ */}
-      {visibility.faq && (
+      {visibility.faq && faqItems.length > 0 && (
         <section id="faq" className="theme-section theme-section-rooms">
           <div className="mx-auto max-w-3xl px-6 lg:px-8">
             <div className="mb-12 text-center">
@@ -432,7 +448,7 @@ export function HotelSite() {
               {isDemo && <DemoLabel>Sample FAQ Content</DemoLabel>}
             </div>
             <div className="space-y-4">
-              {DEMO_FAQ_ITEMS.map((item) => (
+              {faqItems.map((item) => (
                 <details key={item.question} className="theme-card theme-card-body">
                   <summary className="theme-heading cursor-pointer text-lg theme-heading-light">
                     {item.question}
@@ -490,7 +506,7 @@ export function HotelSite() {
             {sections.booking.eyebrow}
           </p>
           <h2 className="theme-heading theme-h2 leading-tight">
-            {formatConfigText(sections.booking.title)}
+            {formatConfigText(sections.booking.title, name)}
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed opacity-90">
             {sections.booking.description}

@@ -20,9 +20,13 @@ export class ThemePresetManager {
     return themePresets[presetId].baseTheme;
   }
 
-  static getDefaultFromConfig(): DesignState {
-    const presetId = configThemeToPreset[hotelConfig.theme] ?? "luxury-boutique";
+  static getDefaultFromTheme(theme: ThemeName): DesignState {
+    const presetId = configThemeToPreset[theme] ?? "luxury-boutique";
     return this.applyPreset(presetId);
+  }
+
+  static getDefaultFromConfig(): DesignState {
+    return this.getDefaultFromTheme(hotelConfig.theme);
   }
 
   static applyPreset(

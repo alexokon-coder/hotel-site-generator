@@ -9,10 +9,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { hotelConfig } from "@/hotel.config";
+import { hotelConfig, type PreviewMode } from "@/hotel.config";
 import { applyDesignToDocument, clearDemoDesignFromDocument } from "@/lib/design/apply-design";
 import { DESIGN_STORAGE_KEY } from "@/lib/design/demo-env";
 import { ThemePresetManager } from "@/lib/design/ThemePresetManager";
+import type { ThemeName } from "@/lib/themes";
 import type {
   CustomizationState,
   DesignState,
@@ -21,6 +22,7 @@ import type {
 
 type DesignContextValue = {
   state: DesignState;
+  customizationEnabled: boolean;
   applyPreset: (presetId: ThemePresetId, keepCustomizations?: boolean) => void;
   updateCustomization: (patch: Partial<CustomizationState>) => void;
   resetToConfigDefault: () => void;
@@ -39,6 +41,12 @@ export const CLIENT_SECTIONS: CustomizationState["sections"] = {
   about: true,
 };
 
+type DesignProviderProps = {
+  children: ReactNode;
+  previewMode?: PreviewMode;
+  theme?: ThemeName;
+};
+
 function loadStoredState(): DesignState | null {
   if (typeof window === "undefined") return null;
   try {
@@ -50,25 +58,30 @@ function loadStoredState(): DesignState | null {
   }
 }
 
-function isCustomizationEnabled(): boolean {
-  return hotelConfig.previewMode === "demo";
-}
+export function DesignProvider({
+  children,
+  previewMode = hotelConfig.previewMode,
+  theme = hotelConfig.theme,
+}: DesignProviderProps) {
+  const customizationEnabled = previewMode === "demo";
 
-export function DesignProvider({ children }: { children: ReactNode }) {
   /** Always match SSR — load localStorage only after mount to avoid hydration mismatch. */
   const [state, setState] = useState<DesignState>(() =>
-    ThemePresetManager.getDefaultFromConfig()
+    ThemePresetManager.getDefaultFromTheme(theme)
   );
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!isCustomizationEnabled()) {
-      clearDemoDesignFromDocument(hotelConfig.theme);
+    if (!customizationEnabled) {
+      clearDemoDesignFromDocument(theme);
       try {
         localStorage.removeItem(DESIGN_STORAGE_KEY);
       } catch {
         /* ignore */
       }
+      const defaultState = ThemePresetManager.getDefaultFromTheme(theme);
+      setState(defaultState);
+      applyDesignToDocument(defaultState);
       setMounted(true);
       return;
     }
@@ -90,21 +103,23 @@ export function DesignProvider({ children }: { children: ReactNode }) {
       setState(normalized);
       applyDesignToDocument(normalized);
     } else {
-      applyDesignToDocument(state);
+      const defaultState = ThemePresetManager.getDefaultFromTheme(theme);
+      setState(defaultState);
+      applyDesignToDocument(defaultState);
     }
     setMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
-  }, []);
+  }, [customizationEnabled, theme]);
 
   useEffect(() => {
-    if (!mounted || !isCustomizationEnabled()) return;
+    if (!mounted || !customizationEnabled) return;
     applyDesignToDocument(state);
     try {
       localStorage.setItem(DESIGN_STORAGE_KEY, JSON.stringify(state));
     } catch {
       /* ignore quota errors */
     }
-  }, [state, mounted]);
+  }, [state, mounted, customizationEnabled]);
 
   const applyPreset = useCallback(
     (presetId: ThemePresetId, keepCustomizations = false) => {
@@ -126,21 +141,22 @@ export function DesignProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const resetToConfigDefault = useCallback(() => {
-    if (!isCustomizationEnabled()) return;
-    const defaultState = ThemePresetManager.getDefaultFromConfig();
+    if (!customizationEnabled) return;
+    const defaultState = ThemePresetManager.getDefaultFromTheme(theme);
     setState(defaultState);
     localStorage.removeItem(DESIGN_STORAGE_KEY);
     applyDesignToDocument(defaultState);
-  }, []);
+  }, [customizationEnabled, theme]);
 
   const value = useMemo(
     () => ({
       state,
+      customizationEnabled,
       applyPreset,
       updateCustomization,
       resetToConfigDefault,
     }),
-    [state, applyPreset, updateCustomization, resetToConfigDefault]
+    [state, customizationEnabled, applyPreset, updateCustomization, resetToConfigDefault]
   );
 
   return (
@@ -152,11 +168,11 @@ export function useDesign() {
   const ctx = useContext(DesignContext);
   const defaultState = ThemePresetManager.getDefaultFromConfig();
 
-  if (!ctx || !isCustomizationEnabled()) {
+  if (!ctx || !ctx.customizationEnabled) {
     return {
-      state: defaultState,
+      state: ctx?.state ?? defaultState,
       customization: {
-        ...defaultState.customization,
+        ...(ctx?.state.customization ?? defaultState.customization),
         sections: CLIENT_SECTIONS,
       },
       applyPreset: () => undefined,

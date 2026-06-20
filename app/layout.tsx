@@ -9,7 +9,6 @@ import {
   Playfair_Display,
   Source_Sans_3,
 } from "next/font/google";
-import { DemoShell } from "@/components/demo/DemoShell";
 import { hotelConfig } from "@/hotel.config";
 import { ThemePresetManager } from "@/lib/design/ThemePresetManager";
 import { generateThemeStylesheet } from "@/lib/themes";
@@ -105,9 +104,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: generateThemeStylesheet() }}
         />
       </head>
-      <body className="min-h-screen">
-        <DemoShell previewMode={previewMode}>{children}</DemoShell>
-      </body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { DEMO_BUSINESS_NAME } from "@/lib/demo-content";
 import type { NavigationStyle } from "@/lib/design/types";
-import { hotelConfig } from "@/hotel.config";
+import type { HotelImage } from "@/lib/hotel-types";
+import { resolveImage } from "@/lib/images";
 
 type NavLink = { href: string; label: string };
 
@@ -11,7 +13,56 @@ type SiteHeaderProps = {
   businessName: string;
   navLinks: NavLink[];
   navigationStyle: NavigationStyle;
+  isDemo: boolean;
+  logo?: HotelImage;
 };
+
+function BrandMark({
+  businessName,
+  isDemo,
+  logo,
+  className,
+  onClick,
+}: {
+  businessName: string;
+  isDemo: boolean;
+  logo?: HotelImage;
+  className?: string;
+  onClick?: () => void;
+}) {
+  if (isDemo) {
+    return (
+      <a href="#" className={`demo-logo-placeholder ${className ?? ""}`} onClick={onClick} aria-label={businessName}>
+        YOUR LOGO
+      </a>
+    );
+  }
+
+  if (logo) {
+    return (
+      <a href="#" className={`relative block h-8 w-32 shrink-0 ${className ?? ""}`} onClick={onClick} aria-label={businessName}>
+        <Image
+          src={resolveImage(logo.src, 200)}
+          alt={logo.alt}
+          fill
+          className="object-contain object-left"
+          sizes="128px"
+        />
+      </a>
+    );
+  }
+
+  return (
+    <a
+      href="#"
+      className={`theme-nav-logo shrink-0 uppercase ${className ?? ""}`}
+      onClick={onClick}
+      aria-label={businessName}
+    >
+      {businessName}
+    </a>
+  );
+}
 
 function MenuIcon({ open }: { open: boolean }) {
   return (
@@ -23,8 +74,13 @@ function MenuIcon({ open }: { open: boolean }) {
   );
 }
 
-export function SiteHeader({ businessName, navLinks, navigationStyle }: SiteHeaderProps) {
-  const isDemo = hotelConfig.previewMode === "demo";
+export function SiteHeader({
+  businessName,
+  navLinks,
+  navigationStyle,
+  isDemo,
+  logo,
+}: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const mid = Math.ceil(navLinks.length / 2);
@@ -68,15 +124,12 @@ export function SiteHeader({ businessName, navLinks, navigationStyle }: SiteHead
       <header className="theme-nav layout-nav fixed top-0 z-50 w-full">
         <nav className="layout-nav-inner mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
           <div className="layout-nav-brand flex min-w-0 items-center gap-3">
-            {isDemo ? (
-              <a href="#" className="demo-logo-placeholder shrink-0" aria-label={businessName}>
-                YOUR LOGO
-              </a>
-            ) : (
-              <a href="#" className="theme-nav-logo shrink-0 text-xl uppercase" aria-label={businessName}>
-                {businessName}
-              </a>
-            )}
+            <BrandMark
+              businessName={businessName}
+              isDemo={isDemo}
+              logo={logo}
+              className="shrink-0"
+            />
             {isDemo && (
               <span className="demo-site-badge layout-nav-badge hidden sm:inline">
                 {DEMO_BUSINESS_NAME}
@@ -88,15 +141,12 @@ export function SiteHeader({ businessName, navLinks, navigationStyle }: SiteHead
 
           <div className="layout-nav-centered hidden items-center justify-center gap-6 lg:flex">
             {linkList(leftLinks, "layout-nav-centered-left flex items-center gap-6")}
-            {isDemo ? (
-              <a href="#" className="demo-logo-placeholder layout-nav-centered-logo shrink-0" aria-label={businessName}>
-                YOUR LOGO
-              </a>
-            ) : (
-              <a href="#" className="theme-nav-logo layout-nav-centered-logo shrink-0 text-xl uppercase" aria-label={businessName}>
-                {businessName}
-              </a>
-            )}
+            <BrandMark
+              businessName={businessName}
+              isDemo={isDemo}
+              logo={logo}
+              className="layout-nav-centered-logo shrink-0 text-xl"
+            />
             {linkList(rightLinks, "layout-nav-centered-right flex items-center gap-6")}
           </div>
 
@@ -127,15 +177,13 @@ export function SiteHeader({ businessName, navLinks, navigationStyle }: SiteHead
         aria-hidden={!menuOpen}
       >
         <div className="layout-nav-panel-head">
-          {isDemo ? (
-            <a href="#" className="demo-logo-placeholder text-xs" onClick={closeMenu}>
-              YOUR LOGO
-            </a>
-          ) : (
-            <a href="#" className="theme-nav-logo text-xs uppercase" onClick={closeMenu}>
-              {businessName}
-            </a>
-          )}
+          <BrandMark
+            businessName={businessName}
+            isDemo={isDemo}
+            logo={logo}
+            className="text-xs"
+            onClick={closeMenu}
+          />
           <button
             type="button"
             className="layout-nav-panel-close"
@@ -162,15 +210,13 @@ export function SiteHeader({ businessName, navLinks, navigationStyle }: SiteHead
         aria-hidden={!menuOpen}
       >
         <div className="layout-nav-drawer-head">
-          {isDemo ? (
-            <a href="#" className="demo-logo-placeholder text-xs" onClick={closeMenu}>
-              YOUR LOGO
-            </a>
-          ) : (
-            <a href="#" className="theme-nav-logo text-xs uppercase" onClick={closeMenu}>
-              {businessName}
-            </a>
-          )}
+          <BrandMark
+            businessName={businessName}
+            isDemo={isDemo}
+            logo={logo}
+            className="text-xs"
+            onClick={closeMenu}
+          />
           <button
             type="button"
             className="layout-nav-panel-close"
