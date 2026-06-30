@@ -11,10 +11,14 @@ type NavLink = { href: string; label: string };
 
 type SiteHeaderProps = {
   businessName: string;
-  navLinks: NavLink[];
+  navLinks: readonly NavLink[];
   navigationStyle: NavigationStyle;
   isDemo: boolean;
   logo?: HotelImage;
+  tagline?: string;
+  headerLayout?: "default" | "brand-split";
+  bookHref?: string;
+  bookExternal?: boolean;
 };
 
 function BrandMark({
@@ -23,12 +27,14 @@ function BrandMark({
   logo,
   className,
   onClick,
+  size = "default",
 }: {
   businessName: string;
   isDemo: boolean;
   logo?: HotelImage;
   className?: string;
   onClick?: () => void;
+  size?: "default" | "large";
 }) {
   if (isDemo) {
     return (
@@ -39,14 +45,24 @@ function BrandMark({
   }
 
   if (logo) {
+    const sizeClass =
+      size === "large"
+        ? "h-12 w-52 max-w-[13rem] sm:h-14 sm:w-56 sm:max-w-[14rem]"
+        : "h-10 w-40 max-w-[10.5rem]";
     return (
-      <a href="#" className={`relative block h-8 w-32 shrink-0 ${className ?? ""}`} onClick={onClick} aria-label={businessName}>
+      <a
+        href="#"
+        className={`relative block shrink-0 ${sizeClass} ${className ?? ""}`}
+        onClick={onClick}
+        aria-label={businessName}
+      >
         <Image
-          src={resolveImage(logo.src, 200)}
+          src={resolveImage(logo.src, 320)}
           alt={logo.alt}
           fill
           className="object-contain object-left"
-          sizes="128px"
+          sizes={size === "large" ? "224px" : "160px"}
+          priority
         />
       </a>
     );
@@ -80,8 +96,13 @@ export function SiteHeader({
   navigationStyle,
   isDemo,
   logo,
+  tagline,
+  headerLayout = "default",
+  bookHref = "#book",
+  bookExternal = false,
 }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const useBrandSplit = headerLayout === "brand-split" && !isDemo;
 
   const mid = Math.ceil(navLinks.length / 2);
   const leftLinks = navLinks.slice(0, mid);
@@ -92,7 +113,7 @@ export function SiteHeader({
 
   useEffect(() => {
     setMenuOpen(false);
-  }, [navigationStyle]);
+  }, [navigationStyle, headerLayout]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -107,10 +128,14 @@ export function SiteHeader({
     };
   }, [menuOpen]);
 
-  const linkList = (links: NavLink[], className: string) => (
+  const bookLinkProps = bookExternal
+    ? { target: "_blank" as const, rel: "noopener noreferrer" }
+    : {};
+
+  const linkList = (links: readonly NavLink[], className: string) => (
     <ul className={className}>
       {links.map((link) => (
-        <li key={link.href}>
+        <li key={`${link.href}-${link.label}`}>
           <a href={link.href} className="theme-nav-link text-sm" onClick={closeMenu}>
             {link.label}
           </a>
@@ -119,9 +144,111 @@ export function SiteHeader({
     </ul>
   );
 
+  const bookCta = (className: string, onClick?: () => void) => (
+    <a
+      href={bookHref}
+      className={className}
+      onClick={onClick}
+      {...bookLinkProps}
+    >
+      Check Availability
+    </a>
+  );
+
+  if (useBrandSplit) {
+    return (
+      <>
+        <header className="theme-nav layout-nav layout-nav--brand-split fixed top-0 z-50 w-full">
+          <nav className="layout-nav-inner layout-nav-inner--brand-split mx-auto max-w-7xl px-5 py-3 sm:px-6 lg:px-8">
+            <div className="layout-nav-top flex items-center justify-between gap-4">
+              <div className="layout-nav-brand-block flex min-w-0 items-center gap-3 sm:gap-4">
+                <BrandMark
+                  businessName={businessName}
+                  isDemo={isDemo}
+                  logo={logo}
+                  size="large"
+                />
+                <div className="layout-nav-brand-text min-w-0">
+                  <a href="#" className="layout-nav-business-name block truncate">
+                    {businessName}
+                  </a>
+                  {tagline && (
+                    <p className="layout-nav-tagline mt-0.5 truncate">{tagline}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="layout-nav-top-actions flex shrink-0 items-center gap-3">
+                {bookCta("theme-btn-nav layout-nav-cta hidden text-xs sm:inline-flex")}
+                <button
+                  type="button"
+                  className="layout-nav-toggle layout-nav-toggle--brand-split"
+                  aria-label={menuOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={menuOpen}
+                  onClick={toggleMenu}
+                >
+                  <MenuIcon open={menuOpen} />
+                </button>
+              </div>
+            </div>
+
+            <div className="layout-nav-bottom hidden lg:flex">
+              {linkList(navLinks, "layout-nav-brand-split-links flex items-center justify-center gap-8 xl:gap-10")}
+            </div>
+          </nav>
+        </header>
+
+        <div
+          className={`layout-nav-backdrop${menuOpen ? " layout-nav-backdrop--open" : ""}`}
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+
+        <div
+          className={`layout-nav-drawer layout-nav-drawer--brand-split${menuOpen ? " layout-nav-drawer--open" : ""}`}
+          aria-hidden={!menuOpen}
+        >
+          <div className="layout-nav-drawer-head">
+            <div className="layout-nav-brand-block flex items-center gap-3">
+              <BrandMark
+                businessName={businessName}
+                isDemo={isDemo}
+                logo={logo}
+                className="!h-9 !w-32"
+                onClick={closeMenu}
+              />
+              <div className="min-w-0">
+                <p className="layout-nav-business-name text-sm">{businessName}</p>
+                {tagline && <p className="layout-nav-tagline text-xs">{tagline}</p>}
+              </div>
+            </div>
+            <button
+              type="button"
+              className="layout-nav-panel-close"
+              onClick={closeMenu}
+              aria-label="Close menu"
+            >
+              ×
+            </button>
+          </div>
+          <nav className="layout-nav-drawer-links">
+            {navLinks.map((link) => (
+              <a key={`${link.href}-${link.label}`} href={link.href} className="layout-nav-drawer-link" onClick={closeMenu}>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          {bookCta("theme-btn-nav layout-nav-drawer-cta text-xs", closeMenu)}
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
-      <header className="theme-nav layout-nav fixed top-0 z-50 w-full">
+      <header
+        className={`theme-nav layout-nav fixed top-0 z-50 w-full${logo && !isDemo ? " layout-nav--has-logo" : ""}`}
+      >
         <nav className="layout-nav-inner mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
           <div className="layout-nav-brand flex min-w-0 items-center gap-3">
             <BrandMark
@@ -150,9 +277,7 @@ export function SiteHeader({
             {linkList(rightLinks, "layout-nav-centered-right flex items-center gap-6")}
           </div>
 
-          <a href="#book" className="theme-btn-nav layout-nav-cta shrink-0 text-xs">
-            Check Availability
-          </a>
+          {bookCta("theme-btn-nav layout-nav-cta shrink-0 text-xs")}
 
           <button
             type="button"
@@ -195,14 +320,12 @@ export function SiteHeader({
         </div>
         <nav className="layout-nav-panel-links">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="layout-nav-panel-link" onClick={closeMenu}>
+            <a key={`${link.href}-${link.label}`} href={link.href} className="layout-nav-panel-link" onClick={closeMenu}>
               {link.label}
             </a>
           ))}
         </nav>
-        <a href="#book" className="theme-btn-nav layout-nav-panel-cta text-xs" onClick={closeMenu}>
-          Check Availability
-        </a>
+        {bookCta("theme-btn-nav layout-nav-panel-cta text-xs", closeMenu)}
       </aside>
 
       <div
@@ -228,14 +351,12 @@ export function SiteHeader({
         </div>
         <nav className="layout-nav-drawer-links">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="layout-nav-drawer-link" onClick={closeMenu}>
+            <a key={`${link.href}-${link.label}`} href={link.href} className="layout-nav-drawer-link" onClick={closeMenu}>
               {link.label}
             </a>
           ))}
         </nav>
-        <a href="#book" className="theme-btn-nav layout-nav-drawer-cta text-xs" onClick={closeMenu}>
-          Check Availability
-        </a>
+        {bookCta("theme-btn-nav layout-nav-drawer-cta text-xs", closeMenu)}
       </div>
     </>
   );

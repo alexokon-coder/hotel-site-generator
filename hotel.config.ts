@@ -257,6 +257,6 @@ export const hotelConfig = {
 export type HotelConfig = typeof hotelConfig;
 
 /** Replaces `{name}` placeholders in config strings with the hotel name. */
-export function formatConfigText(text: string, name = hotelConfig.name): string {
+export function formatConfigText(text: string, name: string = hotelConfig.name): string {
   return text.replace(/\{name\}/g, name);
 }

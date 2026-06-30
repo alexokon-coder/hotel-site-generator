@@ -836,6 +836,196 @@ html[data-nav-style="sidebar"] .layout-nav-drawer {
   display: none !important;
 }
 
+/* Logo-first nav — tighter spacing when brand is an image */
+.layout-nav--has-logo .layout-nav-classic-links {
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  html[data-nav-style="centered-luxury"] .layout-nav--has-logo .layout-nav-centered-left,
+  html[data-nav-style="centered-luxury"] .layout-nav--has-logo .layout-nav-centered-right {
+    gap: 1rem;
+  }
+
+  html[data-nav-style="centered-luxury"] .layout-nav--has-logo .theme-nav-link {
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+  }
+
+  html[data-nav-style="centered-luxury"] .layout-nav--has-logo .layout-nav-centered-logo {
+    margin: 0 0.75rem;
+  }
+}
+
+/* Brand-split header (client previews — logo + name + centered nav) */
+.layout-nav--brand-split {
+  min-height: auto;
+}
+
+.layout-nav-inner--brand-split {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+.layout-nav-top {
+  width: 100%;
+}
+
+.layout-nav-brand-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.layout-nav-brand-text {
+  min-width: 0;
+}
+
+.layout-nav-business-name {
+  font-family: var(--theme-font-serif), Georgia, serif;
+  font-size: clamp(0.95rem, 2vw, 1.125rem);
+  font-weight: var(--font-heading-weight, 500);
+  letter-spacing: 0.02em;
+  color: var(--nav-text);
+  text-decoration: none;
+}
+
+.layout-nav-tagline {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--nav-link);
+}
+
+.layout-nav-bottom {
+  width: 100%;
+  border-top: 1px solid color-mix(in srgb, var(--nav-border) 70%, transparent);
+  padding-top: 0.875rem;
+  margin-top: 0.875rem;
+}
+
+.layout-nav-brand-split-links {
+  flex-wrap: wrap;
+}
+
+.layout-nav-toggle--brand-split {
+  display: flex;
+}
+
+@media (min-width: 1024px) {
+  .layout-nav-toggle--brand-split {
+    display: none;
+  }
+}
+
+html[data-nav-style] .layout-nav--brand-split .layout-nav-classic-links,
+html[data-nav-style] .layout-nav--brand-split .layout-nav-centered {
+  display: none !important;
+}
+
+.layout-nav-drawer--brand-split {
+  display: flex;
+}
+
+.layout-hero--brand-split-nav {
+  padding-top: 7.75rem;
+}
+
+@media (min-width: 1024px) {
+  .layout-hero--brand-split-nav {
+    padding-top: 9.25rem;
+  }
+}
+
+.layout-hero--light .theme-hero-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 9, 8, 0.22) 0%,
+    rgba(10, 9, 8, 0.42) 52%,
+    rgba(10, 9, 8, 0.68) 100%
+  ) !important;
+}
+
+.layout-gallery-editorial {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.layout-gallery-editorial-item {
+  position: relative;
+  min-height: 220px;
+  border-radius: var(--card-radius, 0);
+}
+
+.layout-gallery-editorial-item--default {
+  grid-column: span 12;
+  min-height: 260px;
+}
+
+.layout-gallery-editorial-item--wide {
+  grid-column: span 12;
+  min-height: 320px;
+}
+
+.layout-gallery-editorial-item--tall {
+  grid-column: span 12;
+  min-height: 300px;
+}
+
+@media (min-width: 768px) {
+  .layout-gallery-editorial-item--default {
+    grid-column: span 6;
+    min-height: 280px;
+  }
+
+  .layout-gallery-editorial-item--wide {
+    grid-column: span 8;
+    min-height: 340px;
+  }
+
+  .layout-gallery-editorial-item--tall {
+    grid-column: span 4;
+    min-height: 340px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .layout-gallery-editorial-item--default {
+    grid-column: span 4;
+  }
+
+  .layout-gallery-editorial-item--wide {
+    grid-column: span 8;
+    min-height: 380px;
+  }
+
+  .layout-gallery-editorial-item--tall {
+    grid-column: span 4;
+    min-height: 380px;
+  }
+}
+
+.layout-room-card {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.layout-room-card:hover {
+  transform: translateY(-2px);
+}
+
+.layout-amenity-card {
+  min-height: 100%;
+}
+
+.dual-cta-footnote {
+  font-size: 0.75rem;
+  opacity: 0.68;
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
 /* Hamburger */
 html[data-nav-style="hamburger"] .layout-nav-classic-links,
 html[data-nav-style="hamburger"] .layout-nav-centered {

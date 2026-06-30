@@ -26,6 +26,7 @@ type CtaButton = {
   href: string;
   label: string;
   variant: "primary" | "outline";
+  external?: boolean;
 };
 
 function DualCtaGroup({
@@ -43,6 +44,9 @@ function DualCtaGroup({
             key={btn.label}
             href={btn.href}
             className={`${btn.variant === "primary" ? "theme-btn-primary" : "theme-btn-outline"} hero-cta-button`}
+            {...(btn.external
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {})}
           >
             {btn.label}
           </a>
@@ -70,8 +74,23 @@ export function HotelSite() {
     seo,
     faq,
     logo,
+    gallery: configGallery,
+    gallerySection,
+    galleryLayout,
+    ctaTechNote,
+    bookingUrl,
+    roomsFallback,
+    aboutParagraphs,
+    locationSection,
+    tagline,
+    headerLayout,
+    customNavLinks,
+    heroOverlay,
     navigationStyle: configNavStyle,
   } = config;
+
+  const bookHref = bookingUrl ?? "#book";
+  const bookExternal = Boolean(bookingUrl);
 
   const { customization } = useDesign();
   const { sections: visibility, heroLayout, navigationStyle: designNavStyle } =
@@ -83,14 +102,17 @@ export function HotelSite() {
     : (configNavStyle ?? designNavStyle ?? "classic-horizontal");
 
   const galleryImages = useMemo(
-    () => [
-      images.hero,
-      images.bookingCta,
-      ...rooms.map((r) => r.image),
-      ...attractions.slice(0, 2).map((a) => a.image),
-    ],
-    [images, rooms, attractions]
+    () =>
+      configGallery ?? [
+        images.hero,
+        images.bookingCta,
+        ...rooms.map((r) => r.image),
+        ...attractions.slice(0, 2).map((a) => a.image),
+      ],
+    [configGallery, images, rooms, attractions]
   );
+
+  const ctaFootnote = ctaTechNote ?? (isDemo ? DEMO_CTA_TECH_NOTE : undefined);
 
   const heroCarouselImages = useMemo(
     () => [images.hero, images.bookingCta, ...rooms.slice(0, 2).map((r) => r.image)],
@@ -107,15 +129,22 @@ export function HotelSite() {
     setMounted(true);
   }, []);
 
-  const navLinks = [
+  const navLinks = customNavLinks ?? [
     { href: "#rooms", label: "Rooms" },
+    ...(visibility.about ? [{ href: "#about", label: "About" }] : []),
     ...(visibility.amenities ? [{ href: "#amenities", label: "Amenities" }] : []),
     ...(visibility.gallery ? [{ href: "#gallery", label: "Gallery" }] : []),
-    ...(visibility.attractions ? [{ href: "#attractions", label: "Explore" }] : []),
-    ...(visibility.about ? [{ href: "#about", label: "About" }] : []),
-    ...(visibility.reviews ? [{ href: "#testimonials", label: "Reviews" }] : []),
+    ...(visibility.map && (locationSection || !isDemo)
+      ? [{ href: "#location", label: "Location" }]
+      : []),
+    ...(visibility.attractions && attractions.length > 0
+      ? [{ href: "#attractions", label: "Explore" }]
+      : []),
+    ...(visibility.reviews && testimonials.length > 0
+      ? [{ href: "#testimonials", label: "Reviews" }]
+      : []),
     ...(visibility.faq ? [{ href: "#faq", label: "FAQ" }] : []),
-    { href: "#book", label: "Book" },
+    ...(bookingUrl ? [] : [{ href: "#book", label: "Book" }]),
   ];
 
   return (
@@ -126,10 +155,16 @@ export function HotelSite() {
         navigationStyle={navigationStyle}
         isDemo={isDemo}
         logo={logo}
+        tagline={tagline}
+        headerLayout={headerLayout}
+        bookHref={bookHref}
+        bookExternal={bookExternal}
       />
 
       {/* Hero */}
-      <section className="theme-hero layout-hero relative flex items-center justify-center">
+      <section
+        className={`theme-hero layout-hero relative flex items-center justify-center${heroOverlay === "light" ? " layout-hero--light" : ""}${headerLayout === "brand-split" && !isDemo ? " layout-hero--brand-split-nav" : ""}`}
+      >
         <div className="layout-hero-media absolute inset-0">
           {heroLayout === "image-carousel" ? (
             heroCarouselImages.map((img, i) => (
@@ -163,22 +198,27 @@ export function HotelSite() {
 
         <div className="layout-hero-content theme-hero-text relative z-10 mx-auto max-w-4xl px-6 text-center">
           <p className="theme-hero-eyebrow theme-eyebrow mb-4 text-sm uppercase">
-            {location.display}
+            {hero.eyebrow ?? location.display}
           </p>
           <h1 className="theme-heading theme-h1 leading-tight">
             {hero.headline[0]}
             <br />
             <span className="italic text-accent-light">{hero.headline[1]}</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed opacity-90">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed opacity-95">
             {hero.description}
           </p>
           <DualCtaGroup
             buttons={[
               { href: "#rooms", label: "View Rooms", variant: "outline" },
-              { href: "#book", label: "Check Availability", variant: "primary" },
+              {
+                href: bookHref,
+                label: "Check Availability",
+                variant: "primary",
+                external: bookExternal,
+              },
             ]}
-            footnote={isDemo ? DEMO_CTA_TECH_NOTE : undefined}
+            footnote={ctaFootnote}
           />
         </div>
 
@@ -234,7 +274,15 @@ export function HotelSite() {
           <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
             <p className="theme-eyebrow mb-3 text-sm uppercase">About</p>
             <h2 className="theme-heading theme-h2 theme-heading-light">About {name}</h2>
-            <p className="mx-auto mt-6 leading-relaxed text-muted">{seo.description}</p>
+            {aboutParagraphs && aboutParagraphs.length > 0 ? (
+              <div className="mx-auto mt-6 max-w-3xl space-y-4 text-left leading-relaxed text-muted">
+                {aboutParagraphs.map((paragraph) => (
+                  <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+                ))}
+              </div>
+            ) : (
+              <p className="mx-auto mt-6 leading-relaxed text-muted">{seo.description}</p>
+            )}
             <DemoLabel>Demo Content</DemoLabel>
           </div>
         </section>
@@ -249,34 +297,65 @@ export function HotelSite() {
             <p className="mx-auto mt-4 max-w-2xl text-muted">{sections.rooms.description}</p>
             <DemoLabel>Demo Content</DemoLabel>
           </div>
-          <div className="layout-rooms-grid theme-section-grid grid md:grid-cols-2 lg:grid-cols-3">
-            {rooms.map((room) => (
-              <article key={room.id} className="theme-card group overflow-hidden">
-                <div className="theme-image-wrap theme-room-image-wrap relative aspect-[4/3]">
+          <div className="layout-rooms-grid theme-section-grid grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {rooms.length > 0 ? (
+              rooms.map((room) => (
+              <article key={room.id} className="theme-card layout-room-card group flex h-full flex-col overflow-hidden">
+                <div className="theme-image-wrap theme-room-image-wrap relative aspect-[4/3] shrink-0">
                   <Image
                     src={resolveImage(room.image.src, 800)}
                     alt={room.image.alt}
                     fill
-                    className="theme-image object-cover group-hover:scale-105"
+                    className="theme-image object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
-                <div className="theme-card-body">
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <h3 className="theme-heading text-2xl theme-heading-light">{room.name}</h3>
-                    <span className="shrink-0 text-sm font-medium text-accent">{room.price}</span>
+                <div className="theme-card-body flex flex-1 flex-col">
+                  <div className="mb-3 flex items-start justify-between gap-4">
+                    <h3 className="theme-heading text-2xl leading-snug theme-heading-light">{room.name}</h3>
+                    {room.price ? (
+                      <span className="shrink-0 rounded-sm bg-surface px-2 py-1 text-xs font-semibold tracking-wide text-accent uppercase">
+                        {room.price}
+                      </span>
+                    ) : null}
                   </div>
-                  <p className="text-sm leading-relaxed text-muted">{room.description}</p>
+                  <p className="flex-1 text-sm leading-relaxed text-muted">{room.description}</p>
                   <a
-                    href="#book"
-                    className="mt-4 inline-block text-xs tracking-widest uppercase underline-offset-4 transition-all hover:text-accent hover:underline"
-                    style={{ color: "var(--heading-on-surface)" }}
+                    href={bookHref}
+                    className="theme-btn-outline mt-6 inline-flex w-full items-center justify-center text-center sm:w-auto"
+                    {...(bookExternal
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
                   >
                     Check Availability
                   </a>
                 </div>
               </article>
-            ))}
+              ))
+            ) : (
+              <article className="theme-card theme-card-body md:col-span-2 lg:col-span-3">
+                <h3 className="theme-heading mb-3 text-2xl theme-heading-light">
+                  {roomsFallback?.title ?? "Guest Rooms"}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted">
+                  {roomsFallback?.description ?? sections.rooms.description}
+                </p>
+                {roomsFallback?.verificationNote && (
+                  <p className="mt-4 text-xs leading-relaxed text-muted-subtle">
+                    {roomsFallback.verificationNote}
+                  </p>
+                )}
+                <a
+                  href={bookHref}
+                  className="theme-btn-primary mt-6 inline-block"
+                  {...(bookExternal
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                >
+                  Check Availability
+                </a>
+              </article>
+            )}
           </div>
         </div>
       </section>
@@ -292,9 +371,9 @@ export function HotelSite() {
                 {sections.amenities.description}
               </p>
             </div>
-            <div className="theme-section-grid grid sm:grid-cols-2 lg:grid-cols-3">
+            <div className="theme-section-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {amenities.map((amenity) => (
-                <div key={amenity.title} className="theme-amenity-card p-8">
+                <div key={amenity.title} className="theme-amenity-card layout-amenity-card p-6 lg:p-7">
                   <span className="mb-4 block text-2xl text-accent" aria-hidden="true">
                     {amenity.icon}
                   </span>
@@ -312,25 +391,44 @@ export function HotelSite() {
         <section id="gallery" className="theme-section theme-section-gallery">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mb-16 text-center">
-              <p className="theme-eyebrow mb-3 text-sm uppercase">Property</p>
-              <h2 className="theme-heading theme-h2 theme-heading-light">Photo Gallery</h2>
+              <p className="theme-eyebrow mb-3 text-sm uppercase">
+                {gallerySection?.eyebrow ?? "Property"}
+              </p>
+              <h2 className="theme-heading theme-h2 theme-heading-light">
+                {gallerySection?.title ?? "Photo Gallery"}
+              </h2>
               <p className="mx-auto mt-4 max-w-2xl text-muted">
-                A glimpse of suites, amenities, and the surrounding area.
+                {gallerySection?.description ??
+                  "A glimpse of suites, amenities, and the surrounding area."}
               </p>
               <DemoLabel>Demo Content</DemoLabel>
             </div>
-            <div className="layout-gallery-grid theme-section-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+              className={
+                galleryLayout === "editorial"
+                  ? "layout-gallery-editorial"
+                  : "layout-gallery-grid theme-section-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              }
+            >
               {galleryImages.map((img, i) => (
                 <div
                   key={`${img.src}-${i}`}
-                  className="theme-image-wrap relative aspect-[4/3] overflow-hidden"
+                  className={`theme-image-wrap relative overflow-hidden${
+                    galleryLayout === "editorial"
+                      ? ` layout-gallery-editorial-item layout-gallery-editorial-item--${img.span ?? "default"}`
+                      : " aspect-[4/3]"
+                  }`}
                 >
                   <Image
-                    src={resolveImage(img.src, 800)}
+                    src={resolveImage(img.src, 1200)}
                     alt={img.alt}
                     fill
                     className="theme-image object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    sizes={
+                      galleryLayout === "editorial"
+                        ? "(max-width: 768px) 100vw, 50vw"
+                        : "(max-width: 768px) 100vw, 33vw"
+                    }
                   />
                 </div>
               ))}
@@ -340,7 +438,7 @@ export function HotelSite() {
       )}
 
       {/* Local Attractions */}
-      {visibility.attractions && (
+      {visibility.attractions && attractions.length > 0 && (
         <section id="attractions" className="theme-section theme-section-gallery">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mb-16 text-center">
@@ -379,7 +477,7 @@ export function HotelSite() {
       )}
 
       {/* Testimonials */}
-      {visibility.reviews && (
+      {visibility.reviews && testimonials.length > 0 && (
         <section id="testimonials" className="theme-section theme-section-alt">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mb-16 text-center">
@@ -464,8 +562,33 @@ export function HotelSite() {
         </section>
       )}
 
-      {/* Map */}
-      {visibility.map && (
+      {/* Location */}
+      {visibility.map && locationSection && (
+        <section id="location" className="theme-section theme-section-alt">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mb-10 text-center">
+              <p className="theme-eyebrow mb-3 text-sm uppercase">{locationSection.eyebrow}</p>
+              <h2 className="theme-heading theme-h2 theme-heading-light">{locationSection.title}</h2>
+              <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-muted">
+                {locationSection.description}
+              </p>
+              <p className="mx-auto mt-3 max-w-xl text-sm font-medium text-accent">{mapAddress}</p>
+            </div>
+            <div className="theme-card overflow-hidden">
+              <iframe
+                title={`Map of ${name}`}
+                className="h-[380px] w-full border-0 grayscale-[20%]"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapAddress)}&output=embed`}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Map (demo / fallback) */}
+      {visibility.map && !locationSection && (
         <section id="map" className="theme-section theme-section-alt">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mb-10 text-center">
@@ -508,15 +631,25 @@ export function HotelSite() {
           <h2 className="theme-heading theme-h2 leading-tight">
             {formatConfigText(sections.booking.title, name)}
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed opacity-90">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed opacity-95">
             {sections.booking.description}
           </p>
           <DualCtaGroup
             buttons={[
-              { href: "#book", label: "Check Availability", variant: "primary" },
-              { href: `tel:${contact.phoneTel}`, label: contact.phone, variant: "outline" },
+              {
+                href: bookHref,
+                label: "Check Availability",
+                variant: "primary",
+                external: bookExternal,
+              },
+              {
+                href: contact.phoneTel ? `tel:${contact.phoneTel}` : bookHref,
+                label: contact.phone,
+                variant: "outline",
+                external: false,
+              },
             ]}
-            footnote={isDemo ? DEMO_CTA_TECH_NOTE : undefined}
+            footnote={ctaFootnote}
           />
         </div>
       </section>
@@ -558,6 +691,24 @@ export function HotelSite() {
                 </p>
               </div>
             </div>
+            {bookExternal && !isDemo ? (
+              <div className="theme-card theme-card-body space-y-6">
+                <p className="leading-relaxed text-muted-on-dark">
+                  {sections.booking.formDescription}
+                </p>
+                <a
+                  href={bookHref}
+                  className="theme-btn-primary inline-block"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Book Your Stay Now
+                </a>
+                <p className="text-xs text-muted-on-dark opacity-80">
+                  Reservations are processed securely through eviivo.
+                </p>
+              </div>
+            ) : (
             <form className="space-y-5">
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
@@ -675,6 +826,7 @@ export function HotelSite() {
                 Check Availability
               </button>
             </form>
+            )}
           </div>
         </div>
       </section>
@@ -684,6 +836,16 @@ export function HotelSite() {
           <div className="flex flex-col items-center gap-2 md:items-start">
             {isDemo ? (
               <span className="demo-logo-placeholder text-xs">YOUR LOGO</span>
+            ) : logo ? (
+              <span className="relative block h-8 w-32">
+                <Image
+                  src={resolveImage(logo.src, 200)}
+                  alt={logo.alt}
+                  fill
+                  className="object-contain object-left"
+                  sizes="128px"
+                />
+              </span>
             ) : (
               <span className="theme-nav-logo text-xs uppercase">{name}</span>
             )}

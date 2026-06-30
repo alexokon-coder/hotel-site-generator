@@ -1,9 +1,14 @@
 import type { HotelPreview } from "@/lib/hotel-types";
+import { arcadiaBedBreakfastConfig } from "./arcadia-bed-breakfast";
 import { blueHarborLodgeConfig } from "./blue-harbor-lodge";
 import { magnoliaInnConfig } from "./magnolia-inn";
 import { sunsetMotelConfig } from "./sunset-motel";
 
 const hotelPreviews: Record<string, HotelPreview> = {
+  "arcadia-bed-breakfast": {
+    slug: "arcadia-bed-breakfast",
+    config: arcadiaBedBreakfastConfig,
+  },
   "magnolia-inn": {
     slug: "magnolia-inn",
     config: magnoliaInnConfig,
